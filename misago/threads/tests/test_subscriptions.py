@@ -22,10 +22,7 @@ class SubscriptionsTests(TestCase):
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
-        return testutils.post_thread(
-            category=self.category,
-            started_on=datetime
-        )
+        return testutils.post_thread(category=self.category, started_on=datetime)
 
     def test_anon_subscription(self):
         """make single thread sub aware for anon"""
@@ -36,8 +33,7 @@ class SubscriptionsTests(TestCase):
         """make multiple threads list sub aware for anon"""
         threads = []
         for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
+            threads.append(self.post_thread(timezone.now() - timedelta(days=10)))
 
         make_subscription_aware(self.anon, threads)
 
@@ -53,8 +49,7 @@ class SubscriptionsTests(TestCase):
         """make mulitple threads sub aware for authenticated"""
         threads = []
         for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
+            threads.append(self.post_thread(timezone.now() - timedelta(days=10)))
 
         make_subscription_aware(self.user, threads)
 
@@ -66,7 +61,6 @@ class SubscriptionsTests(TestCase):
         self.user.subscription_set.create(
             thread=self.thread,
             category=self.category,
-
             last_read_on=timezone.now(),
             send_email=True,
         )
@@ -78,14 +72,12 @@ class SubscriptionsTests(TestCase):
         """make mulitple threads sub aware for authenticated"""
         threads = []
         for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
+            threads.append(self.post_thread(timezone.now() - timedelta(days=10)))
 
             if i % 3 == 0:
                 self.user.subscription_set.create(
                     thread=threads[-1],
                     category=self.category,
-
                     last_read_on=timezone.now(),
                     send_email=False,
                 )
@@ -93,7 +85,6 @@ class SubscriptionsTests(TestCase):
                 self.user.subscription_set.create(
                     thread=threads[-1],
                     category=self.category,
-
                     last_read_on=timezone.now(),
                     send_email=True,
                 )

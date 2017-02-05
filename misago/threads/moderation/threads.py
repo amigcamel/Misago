@@ -18,9 +18,7 @@ def change_thread_title(request, thread, new_title):
         thread.first_post.update_search_vector()
         thread.first_post.save(update_fields=['search_vector'])
 
-        record_event(request, thread, 'changed_title', {
-            'old_title': old_title
-        })
+        record_event(request, thread, 'changed_title', {'old_title': old_title})
         return True
     else:
         return False
@@ -62,12 +60,14 @@ def move_thread(request, thread, new_category):
         from_category = thread.category
         thread.move(new_category)
 
-        record_event(request, thread, 'moved', {
-            'from_category': {
-                'name': from_category.name,
-                'url': from_category.get_absolute_url(),
+        record_event(
+            request, thread, 'moved', {
+                'from_category': {
+                    'name': from_category.name,
+                    'url': from_category.get_absolute_url(),
+                }
             }
-        })
+        )
         return True
     else:
         return False
@@ -78,9 +78,7 @@ def merge_thread(request, thread, other_thread):
     thread.merge(other_thread)
     other_thread.delete()
 
-    record_event(request, thread, 'merged', {
-        'merged_thread': other_thread.title,
-    })
+    record_event(request, thread, 'merged', {'merged_thread': other_thread.title, })
     return True
 
 
@@ -138,13 +136,15 @@ def hide_thread(request, thread):
         thread.first_post.hidden_by_name = request.user.username
         thread.first_post.hidden_by_slug = request.user.slug
         thread.first_post.hidden_on = timezone.now()
-        thread.first_post.save(update_fields=[
-            'is_hidden',
-            'hidden_by',
-            'hidden_by_name',
-            'hidden_by_slug',
-            'hidden_on',
-        ])
+        thread.first_post.save(
+            update_fields=[
+                'is_hidden',
+                'hidden_by',
+                'hidden_by_name',
+                'hidden_by_slug',
+                'hidden_on',
+            ]
+        )
         thread.is_hidden = True
 
         record_event(request, thread, 'hid')

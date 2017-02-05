@@ -3,7 +3,6 @@ from misago.core.pgutils import batch_update
 from ...models import MovedId, OldIdRedirect
 from ..base import BaseCommand
 
-
 MAPPINGS = {
     'category': OldIdRedirect.CATEGORY,
     'post': OldIdRedirect.POST,
@@ -13,9 +12,7 @@ MAPPINGS = {
 
 
 class Command(BaseCommand):
-    help = (
-        "Builds moves index for redirects from old urls to new ones."
-    )
+    help = ("Builds moves index for redirects from old urls to new ones.")
 
     def handle(self, *args, **options):
         self.stdout.write("Building moves index...")

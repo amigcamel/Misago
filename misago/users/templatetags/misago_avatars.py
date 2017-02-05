@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from misago.conf import settings
 
-
 register = template.Library()
 
 
@@ -14,4 +13,3 @@ def avatar(user, size=200):
         if user_avatar['size'] >= size:
             found_avatar = user_avatar
     return found_avatar['url']
-

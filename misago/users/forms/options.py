@@ -14,21 +14,22 @@ class ForumOptionsForm(forms.ModelForm):
     is_hiding_presence = YesNoSwitch()
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
-        coerce=int, choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
+        coerce=int, choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES
+    )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
-        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
+        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES
+    )
 
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
+        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES
+    )
 
     class Meta:
         model = get_user_model()
         fields = [
-            'is_hiding_presence',
-            'limits_private_thread_invites_to',
-            'subscribe_to_started_threads',
-            'subscribe_to_replied_threads'
+            'is_hiding_presence', 'limits_private_thread_invites_to',
+            'subscribe_to_started_threads', 'subscribe_to_replied_threads'
         ]
 
 

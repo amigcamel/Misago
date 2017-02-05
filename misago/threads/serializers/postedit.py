@@ -4,10 +4,7 @@ from rest_framework import serializers
 
 from ..models import PostEdit
 
-
-__all__ = [
-    'PostEditSerializer',
-]
+__all__ = ['PostEditSerializer', ]
 
 
 class PostEditSerializer(serializers.ModelSerializer):
@@ -22,9 +19,7 @@ class PostEditSerializer(serializers.ModelSerializer):
             'edited_on',
             'editor_name',
             'editor_slug',
-
             'diff',
-
             'url',
         )
 
@@ -32,15 +27,15 @@ class PostEditSerializer(serializers.ModelSerializer):
         return obj.get_diff()
 
     def get_url(self, obj):
-        return {
-            'editor': self.get_editor_url(obj),
-        }
+        return {'editor': self.get_editor_url(obj), }
 
     def get_editor_url(self, obj):
         if obj.editor_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.editor_slug,
-                'pk': obj.editor_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.editor_slug,
+                    'pk': obj.editor_id,
+                }
+            )
         else:
             return None

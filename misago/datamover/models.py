@@ -18,6 +18,4 @@ class OldIdRedirect(models.Model):
     new_id = models.PositiveIntegerField()
 
     class Meta:
-        index_together = [
-            ['model', 'old_id'],
-        ]
+        index_together = [['model', 'old_id'], ]

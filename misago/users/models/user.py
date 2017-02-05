@@ -21,45 +21,34 @@ from ..signatures import is_user_signature_valid, make_signature_checksum
 from ..utils import hash_email
 from .rank import Rank
 
-
 __all__ = [
     'ACTIVATION_REQUIRED_NONE',
     'ACTIVATION_REQUIRED_USER',
     'ACTIVATION_REQUIRED_ADMIN',
-
     'AUTO_SUBSCRIBE_NONE',
     'AUTO_SUBSCRIBE_NOTIFY',
     'AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL',
     'AUTO_SUBSCRIBE_CHOICES',
-
     'LIMITS_PRIVATE_THREAD_INVITES_TO_NONE',
     'LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED',
     'LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY',
     'PRIVATE_THREAD_INVITES_LIMITS_CHOICES',
-
     'AnonymousUser',
     'User',
     'UsernameChange',
     'Online',
 ]
 
-
 ACTIVATION_REQUIRED_NONE = 0
 ACTIVATION_REQUIRED_USER = 1
 ACTIVATION_REQUIRED_ADMIN = 2
-
 
 AUTO_SUBSCRIBE_NONE = 0
 AUTO_SUBSCRIBE_NOTIFY = 1
 AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
 
-AUTO_SUBSCRIBE_CHOICES = (
-    (AUTO_SUBSCRIBE_NONE, _("No")),
-    (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
-    (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
-     _("Notify with e-mail"))
-)
-
+AUTO_SUBSCRIBE_CHOICES = ((AUTO_SUBSCRIBE_NONE, _("No")), (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
+                          (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL, _("Notify with e-mail")))
 
 LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
 LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
@@ -106,17 +95,10 @@ class UserManager(BaseUserManager):
             new_value = WATCH_DICT[settings.subscribe_reply]
             extra_fields['subscribe_to_replied_threads'] = new_value
 
-        extra_fields.update({
-            'is_staff': False,
-            'is_superuser': False
-        })
+        extra_fields.update({'is_staff': False, 'is_superuser': False})
 
         now = timezone.now()
-        user = self.model(
-            last_login=now,
-            joined_on=now,
-            **extra_fields
-        )
+        user = self.model(last_login=now, joined_on=now, **extra_fields)
 
         user.set_username(username)
         user.set_email(email)
@@ -128,8 +110,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         if set_default_avatar:
-            avatars.set_default_avatar(user, settings.default_avatar,
-                                       settings.default_gravatar_fallback)
+            avatars.set_default_avatar(
+                user, settings.default_avatar, settings.default_gravatar_fallback
+            )
         else:
             # just for test purposes
             user.avatars = [{'size': 400, 'url': '/placekitten.com/400/400'}]
@@ -151,9 +134,10 @@ class UserManager(BaseUserManager):
         return user
 
     @transaction.atomic
-    def create_superuser(self, username, email, password,
-                         set_default_avatar=False):
-        user = self.create_user(username, email,
+    def create_superuser(self, username, email, password, set_default_avatar=False):
+        user = self.create_user(
+            username,
+            email,
             password=password,
             set_default_avatar=set_default_avatar,
         )
@@ -210,7 +194,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
 
-    is_staff = models.BooleanField(_('staff status'),
+    is_staff = models.BooleanField(
+        _('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into admin sites.'),
     )
@@ -230,16 +215,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active_staff_message = models.TextField(null=True, blank=True)
 
     avatar_tmp = models.ImageField(
-        max_length=255,
-        upload_to=avatars.store.upload_to,
-        null=True,
-        blank=True
+        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
     )
     avatar_src = models.ImageField(
-        max_length=255,
-        upload_to=avatars.store.upload_to,
-        null=True,
-        blank=True
+        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
@@ -257,11 +236,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
 
-    follows = models.ManyToManyField('self',
+    follows = models.ManyToManyField(
+        'self',
         related_name='followed_by',
         symmetrical=False,
     )
-    blocks = models.ManyToManyField('self',
+    blocks = models.ManyToManyField(
+        'self',
         related_name='blocked_by',
         symmetrical=False,
     )
@@ -272,12 +253,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
 
-    subscribe_to_started_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
-    )
-    subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
-    )
+    subscribe_to_started_threads = models.PositiveIntegerField(default=AUTO_SUBSCRIBE_NONE)
+    subscribe_to_replied_threads = models.PositiveIntegerField(default=AUTO_SUBSCRIBE_NONE)
 
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0, db_index=True)
@@ -357,10 +334,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return is_user_signature_valid(self)
 
     def get_absolute_url(self):
-        return reverse('misago:user', kwargs={
-            'slug': self.slug,
-            'pk': self.pk,
-        })
+        return reverse(
+            'misago:user', kwargs={
+                'slug': self.slug,
+                'pk': self.pk,
+            }
+        )
 
     def get_username(self):
         """
@@ -383,8 +362,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             if self.pk:
                 changed_by = changed_by or self
-                self.record_name_change(
-                    changed_by, new_username, old_username)
+                self.record_name_change(changed_by, new_username, old_username)
 
                 from ..signals import username_changed
                 username_changed.send(sender=self)
@@ -463,14 +441,15 @@ class Online(models.Model):
         try:
             super(Online, self).save(*args, **kwargs)
         except IntegrityError:
-            pass # first come is first serve in online tracker
+            pass    # first come is first serve in online tracker
 
 
 class UsernameChange(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-        related_name='namechanges')
-    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        null=True, blank=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='namechanges')
+    changed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
         related_name='user_renames',
         on_delete=models.SET_NULL,
     )

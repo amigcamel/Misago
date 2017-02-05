@@ -11,13 +11,13 @@ class URLPatterns(object):
             'path': path,
             'parent': parent,
             'namespace': namespace,
-            })
+        })
 
     def patterns(self, namespace, *urlpatterns):
         self._patterns.append({
             'namespace': namespace,
             'urlpatterns': urlpatterns,
-            })
+        })
 
     def get_child_patterns(self, parent):
         prefix = '%s:' % parent if parent else ''

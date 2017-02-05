@@ -28,10 +28,8 @@ class GatewaySettingsTests(TestCase):
     def test_get_existing_setting(self):
         """forum_name is defined"""
         self.assertEqual(gateway.forum_name, db_settings.forum_name)
-        self.assertEqual(gateway.INSTALLED_APPS,
-                         dj_settings.INSTALLED_APPS)
-        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE,
-                         defaults.MISAGO_THREADS_PER_PAGE)
+        self.assertEqual(gateway.INSTALLED_APPS, dj_settings.INSTALLED_APPS)
+        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE, defaults.MISAGO_THREADS_PER_PAGE)
 
         with self.assertRaises(AttributeError):
             gateway.LoremIpsum
@@ -53,9 +51,9 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Public Eric",
                     'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
+                        'min_length': 2,
+                        'max_length': 255
+                    },
                     'is_public': True
                 },
                 {
@@ -63,9 +61,9 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Private Eric",
                     'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
+                        'min_length': 2,
+                        'max_length': 255
+                    },
                     'is_public': False
                 },
             )
@@ -80,7 +78,6 @@ class GatewaySettingsTests(TestCase):
         self.assertIn('fish_name', public_settings)
         self.assertNotIn('private_fish_name', public_settings)
 
-
     def test_setting_lazy(self):
         """lazy settings work"""
         test_group = {
@@ -93,9 +90,9 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Greedy Eric",
                     'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
+                        'min_length': 2,
+                        'max_length': 255
+                    },
                     'is_lazy': False
                 },
                 {
@@ -103,18 +100,18 @@ class GatewaySettingsTests(TestCase):
                     'name': "Fish's name",
                     'value': "Lazy Eric",
                     'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
+                        'min_length': 2,
+                        'max_length': 255
+                    },
                     'is_lazy': True
                 },
                 {
                     'setting': 'lazy_empty_setting',
                     'name': "Fish's name",
                     'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
+                        'min_length': 2,
+                        'max_length': 255
+                    },
                     'is_lazy': True
                 },
             )
@@ -126,11 +123,9 @@ class GatewaySettingsTests(TestCase):
         self.assertTrue(db_settings.lazy_fish_name)
 
         self.assertTrue(gateway.lazy_fish_name)
-        self.assertEqual(
-            gateway.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
+        self.assertEqual(gateway.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
         self.assertTrue(db_settings.lazy_fish_name)
-        self.assertEqual(
-            db_settings.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
+        self.assertEqual(db_settings.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
 
         self.assertTrue(gateway.lazy_empty_setting is None)
         self.assertTrue(db_settings.lazy_empty_setting is None)

@@ -5,7 +5,6 @@ from django.core.management import base
 
 from .. import OLD_FORUM
 
-
 CommandError = base.CommandError
 
 

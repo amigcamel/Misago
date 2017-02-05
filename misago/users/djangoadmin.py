@@ -16,7 +16,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
-
 # Misago user model
 User = get_user_model()
 
@@ -103,23 +102,27 @@ class UserAdminModel(admin.ModelAdmin):
     fieldsets = (
         (
             _('Misago user data'),
-            {'fields': (
-                'username',
-                'email',
-                'rank',
-                'last_login',
-                'joined_on',
-                'is_staff',
-                'is_superuser',
-                'edit_from_misago_link',
-            )},
+            {
+                'fields': (
+                    'username',
+                    'email',
+                    'rank',
+                    'last_login',
+                    'joined_on',
+                    'is_staff',
+                    'is_superuser',
+                    'edit_from_misago_link',
+                )
+            },
         ),
         (
             _('Edit permissions and groups'),
-            {'fields': (
-                'groups',
-                'user_permissions',
-            )},
+            {
+                'fields': (
+                    'groups',
+                    'user_permissions',
+                )
+            },
         ),
     )
 

@@ -7,20 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.core import cachebuster
 
-
-__all__ = [
-    'BAN_USERNAME', 'BAN_EMAIL', 'BAN_IP', 'BANS_CHOICES',
-    'Ban', 'BanCache'
-]
-
+__all__ = ['BAN_USERNAME', 'BAN_EMAIL', 'BAN_IP', 'BANS_CHOICES', 'Ban', 'BanCache']
 
 BAN_CACHEBUSTER = 'misago_bans'
-
 
 BAN_USERNAME = 0
 BAN_EMAIL = 1
 BAN_IP = 2
-
 
 BANS_CHOICES = (
     (BAN_USERNAME, _('Username')),
@@ -63,11 +56,9 @@ class BansManager(models.Manager):
         for ban in queryset.order_by('-id').iterator():
             if ban.is_expired:
                 continue
-            elif (ban.check_type == BAN_USERNAME and username and
-                    ban.check_value(username)):
+            elif (ban.check_type == BAN_USERNAME and username and ban.check_value(username)):
                 return ban
-            elif (ban.check_type == BAN_EMAIL and email and
-                    ban.check_value(email)):
+            elif (ban.check_type == BAN_EMAIL and email and ban.check_value(email)):
                 return ban
             elif ban.check_type == BAN_IP and ip and ban.check_value(ip):
                 return ban
@@ -122,7 +113,9 @@ class Ban(models.Model):
 
 
 class BanCache(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache'
+    )
     ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
     bans_version = models.PositiveIntegerField(default=0)
     user_message = models.TextField(null=True, blank=True)
@@ -133,7 +126,7 @@ class BanCache(models.Model):
         try:
             super(BanCache, self).save(*args, **kwargs)
         except IntegrityError:
-            pass # first come is first serve with ban cache
+            pass    # first come is first serve with ban cache
 
     def get_serialized_message(self):
         from ..serializers import BanMessageSerializer
@@ -152,8 +145,7 @@ class BanCache(models.Model):
 
     @property
     def is_valid(self):
-        version_is_valid = cachebuster.is_valid(BAN_CACHEBUSTER,
-                                                self.bans_version)
+        version_is_valid = cachebuster.is_valid(BAN_CACHEBUSTER, self.bans_version)
         expired = self.expires_on and self.expires_on < timezone.now()
 
         return version_is_valid and not expired

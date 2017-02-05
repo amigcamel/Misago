@@ -7,25 +7,16 @@ from misago.conf import settings
 
 from ..models import BAN_EMAIL, BAN_USERNAME, Ban
 from ..validators import (
-    validate_email,
-    validate_email_available,
-    validate_email_banned,
-    validate_gmail_email,
-    validate_password,
-    validate_username,
-    validate_username_available,
-    validate_username_banned,
-    validate_username_content,
-    validate_username_length
+    validate_email, validate_email_available, validate_email_banned, validate_gmail_email,
+    validate_password, validate_username, validate_username_available, validate_username_banned,
+    validate_username_content, validate_username_length
 )
 
 
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
         User = get_user_model()
-        self.test_user = User.objects.create_user('EricTheFish',
-                                                  'eric@test.com',
-                                                  'pass123')
+        self.test_user = User.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_email(self):
         """validate_email_available allows available emails"""
@@ -82,14 +73,12 @@ class ValidateUsernameTests(TestCase):
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
         User = get_user_model()
-        self.test_user = User.objects.create_user(
-            'EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = User.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
         validate_username_available('BobBoberson')
-        validate_username_available(
-            self.test_user.username, exclude=self.test_user)
+        validate_username_available(self.test_user.username, exclude=self.test_user)
 
     def test_invalid_name(self):
         """validate_username_available disallows unvailable names"""

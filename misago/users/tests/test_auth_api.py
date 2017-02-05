@@ -9,9 +9,7 @@ from ..tokens import make_password_change_token
 class GatewayTests(TestCase):
     def test_api_invalid_credentials(self):
         """login api returns 400 on invalid POST"""
-        response = self.client.post(
-            '/api/auth/',
-            data={'username': 'nope', 'password': 'nope'})
+        response = self.client.post('/api/auth/', data={'username': 'nope', 'password': 'nope'})
 
         self.assertContains(response, "Login or password is incorrect.", status_code=400)
 
@@ -26,10 +24,12 @@ class GatewayTests(TestCase):
         User = get_user_model()
         user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
 
         self.assertEqual(response.status_code, 200)
 
@@ -56,18 +56,18 @@ class GatewayTests(TestCase):
             user_message='You are tragically banned.',
         )
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(response_json['code'], 'banned')
-        self.assertEqual(response_json['detail']['message']['plain'],
-                         ban.user_message)
-        self.assertEqual(response_json['detail']['message']['html'],
-                         '<p>%s</p>' % ban.user_message)
+        self.assertEqual(response_json['detail']['message']['plain'], ban.user_message)
+        self.assertEqual(response_json['detail']['message']['html'], '<p>%s</p>' % ban.user_message)
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
@@ -89,10 +89,12 @@ class GatewayTests(TestCase):
             user_message='You are tragically banned.',
         )
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get('/api/auth/')
@@ -105,13 +107,14 @@ class GatewayTests(TestCase):
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
         User = get_user_model()
-        User.objects.create_user(
-            'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
+        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -126,13 +129,14 @@ class GatewayTests(TestCase):
     def test_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
         User = get_user_model()
-        User.objects.create_user(
-            'Bob', 'bob@test.com', 'Pass.123', requires_activation=2)
+        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123', requires_activation=2)
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -147,16 +151,17 @@ class GatewayTests(TestCase):
     def test_login_disabled_user(self):
         """its impossible to sign in to disabled account"""
         User = get_user_model()
-        user = User.objects.create_user(
-            'Bob', 'bob@test.com', 'Pass.123', is_active=False)
+        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123', is_active=False)
 
         user.is_staff = True
         user.save()
 
-        response = self.client.post('/api/auth/', data={
-            'username': 'Bob',
-            'password': 'Pass.123',
-        })
+        response = self.client.post(
+            '/api/auth/', data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            }
+        )
         self.assertContains(response, "Login or password is incorrect.", status_code=400)
 
         response = self.client.get('/api/auth/')
@@ -324,10 +329,10 @@ class ChangePasswordAPITests(TestCase):
 
     def test_submit_valid(self):
         """submit change password form api errors for empty body"""
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ), data={'password': 'n3wp4ss!'})
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user)),
+            data={'password': 'n3wp4ss!'}
+        )
         self.assertEqual(response.status_code, 200)
 
         user = get_user_model().objects.get(id=self.user.pk)
@@ -335,10 +340,7 @@ class ChangePasswordAPITests(TestCase):
 
     def test_invalid_token_link(self):
         """api errors on invalid user id link"""
-        response = self.client.post(self.link % (
-            self.user.pk,
-            'asda7ad89sa7d9s789as'
-        ))
+        response = self.client.post(self.link % (self.user.pk, 'asda7ad89sa7d9s789as'))
 
         self.assertContains(response, "Form link is invalid.", status_code=400)
 
@@ -350,10 +352,9 @@ class ChangePasswordAPITests(TestCase):
             user_message='Nope!',
         )
 
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ))
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user))
+        )
         self.assertContains(response, "Your link has expired.", status_code=400)
 
     def test_inactive_user(self):
@@ -361,19 +362,17 @@ class ChangePasswordAPITests(TestCase):
         self.user.requires_activation = 1
         self.user.save()
 
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ))
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user))
+        )
         self.assertContains(response, "Your link has expired.", status_code=400)
 
         self.user.requires_activation = 2
         self.user.save()
 
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ))
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user))
+        )
         self.assertContains(response, "Your link has expired.", status_code=400)
 
     def test_disabled_user(self):
@@ -381,16 +380,14 @@ class ChangePasswordAPITests(TestCase):
         self.user.is_active = False
         self.user.save()
 
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ))
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user))
+        )
         self.assertContains(response, "Form link is invalid.", status_code=400)
 
     def test_submit_empty(self):
         """change password api errors for empty body"""
-        response = self.client.post(self.link % (
-            self.user.pk,
-            make_password_change_token(self.user)
-        ))
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user))
+        )
         self.assertContains(response, "Valid password must", status_code=400)

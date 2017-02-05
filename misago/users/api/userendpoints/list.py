@@ -9,8 +9,7 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.cache import cache
-from misago.core.shortcuts import (
-    get_int_or_404, get_object_or_404, paginate, paginated_response)
+from misago.core.shortcuts import (get_int_or_404, get_object_or_404, paginate, paginated_response)
 
 from ...activepostersranking import get_active_posters_ranking
 from ...models import Rank
@@ -32,7 +31,7 @@ def active(request):
 def generic(request):
     page = get_int_or_404(request.GET.get('page', 0))
     if page == 1:
-        page = 0 # api allows explicit first page
+        page = 0    # api allows explicit first page
 
     allow_name_search = True
     queryset = get_user_model().objects
@@ -52,7 +51,7 @@ def generic(request):
         queryset = queryset.filter(rank=rank)
         allow_name_search = False
     else:
-        raise Http404() # don't use this api for searches
+        raise Http404()    # don't use this api for searches
 
     if request.query_params.get('name'):
         name_starts_with = request.query_params.get('name').strip().lower()
@@ -61,8 +60,7 @@ def generic(request):
         else:
             raise Http404()
 
-    queryset = queryset.select_related(
-        'rank', 'ban_cache', 'online_tracker').order_by('slug')
+    queryset = queryset.select_related('rank', 'ban_cache', 'online_tracker').order_by('slug')
 
     list_page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
 
@@ -71,9 +69,7 @@ def generic(request):
     return paginated_response(list_page, serializer=UserSerializer)
 
 
-LISTS = {
-    'active': active,
-}
+LISTS = {'active': active, }
 
 
 def list_endpoint(request):

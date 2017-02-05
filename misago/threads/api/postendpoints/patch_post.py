@@ -8,7 +8,6 @@ from ...models import PostLike
 from ...moderation import posts as moderation
 from ...permissions.threads import allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post
 
-
 post_patch_dispatcher = ApiPatch()
 
 
@@ -19,6 +18,8 @@ def patch_acl(request, post, value):
         return {'acl': post.acl}
     else:
         return {'acl': None}
+
+
 post_patch_dispatcher.add('acl', patch_acl)
 
 
@@ -59,10 +60,7 @@ def patch_is_liked(request, post, value):
 
     post.last_likes = []
     for like in post.postlike_set.all()[:4]:
-        post.last_likes.append({
-            'id': like.liker_id,
-            'username': like.liker_name
-        })
+        post.last_likes.append({'id': like.liker_id, 'username': like.liker_name})
 
     post.save(update_fields=['likes', 'last_likes'])
 
@@ -71,6 +69,8 @@ def patch_is_liked(request, post, value):
         'last_likes': post.last_likes or [],
         'is_liked': value,
     }
+
+
 post_patch_dispatcher.replace('is-liked', patch_is_liked)
 
 
@@ -81,6 +81,8 @@ def patch_is_protected(request, post, value):
     else:
         moderation.unprotect_post(request.user, post)
     return {'is_protected': post.is_protected}
+
+
 post_patch_dispatcher.replace('is-protected', patch_is_protected)
 
 
@@ -89,6 +91,8 @@ def patch_is_unapproved(request, post, value):
         allow_approve_post(request.user, post)
         moderation.approve_post(request.user, post)
     return {'is_unapproved': post.is_unapproved}
+
+
 post_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 
@@ -101,6 +105,8 @@ def patch_is_hidden(request, post, value):
         moderation.unhide_post(request.user, post)
 
     return {'is_hidden': post.is_hidden}
+
+
 post_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 

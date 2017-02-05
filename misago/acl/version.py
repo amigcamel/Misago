@@ -1,6 +1,5 @@
 from misago.core import cachebuster as cb
 
-
 ACL_CACHE_NAME = 'misago_acl'
 
 

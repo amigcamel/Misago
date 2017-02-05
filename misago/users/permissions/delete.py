@@ -10,11 +10,11 @@ from django.utils.translation import ungettext
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-
-
 """
 Admin Permissions Form
 """
+
+
 class PermissionsForm(forms.Form):
     legend = _("Deleting users")
 
@@ -42,6 +42,8 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
+
+
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_delete_users_newer_than': 0,
@@ -49,7 +51,10 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
+    return algebra.sum_acls(
+        new_acl,
+        roles=roles,
+        key=key_name,
         can_delete_users_newer_than=algebra.greater,
         can_delete_users_with_less_posts_than=algebra.greater
     )
@@ -58,6 +63,8 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
+
+
 def add_acl_to_user(user, target):
     target.acl_['can_delete'] = can_delete_user(user, target)
     if target.acl_['can_delete']:
@@ -71,6 +78,8 @@ def register_with(registry):
 """
 ACL tests
 """
+
+
 def allow_delete_user(user, target):
     newer_than = user.acl['can_delete_users_newer_than']
     less_posts_than = user.acl['can_delete_users_with_less_posts_than']
@@ -84,17 +93,23 @@ def allow_delete_user(user, target):
 
     if newer_than:
         if target.joined_on < timezone.now() - timedelta(days=newer_than):
-            message = ungettext("You can't delete users that are "
-                                "members for more than %(days)s day.",
-                                "You can't delete users that are "
-                                "members for more than %(days)s days.",
-                                newer_than) % {'days': newer_than}
+            message = ungettext(
+                "You can't delete users that are "
+                "members for more than %(days)s day.", "You can't delete users that are "
+                "members for more than %(days)s days.", newer_than
+            ) % {
+                'days': newer_than
+            }
             raise PermissionDenied(message)
     if less_posts_than:
         if target.posts > less_posts_than:
             message = ungettext(
                 "You can't delete users that made more than %(posts)s post.",
-                "You can't delete users that made more than %(posts)s posts.",
-                less_posts_than) % {'posts': less_posts_than}
+                "You can't delete users that made more than %(posts)s posts.", less_posts_than
+            ) % {
+                'posts': less_posts_than
+            }
             raise PermissionDenied(message)
+
+
 can_delete_user = return_boolean(allow_delete_user)

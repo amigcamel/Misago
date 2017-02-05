@@ -8,7 +8,6 @@ from ..models import Thread
 from .poll import PollSerializer
 from .threadparticipant import ThreadParticipantSerializer
 
-
 __all__ = [
     'ThreadSerializer',
     'PrivateThreadSerializer',
@@ -46,14 +45,12 @@ class ThreadSerializer(serializers.ModelSerializer):
             'is_hidden',
             'is_closed',
             'weight',
-
             'acl',
             'is_new',
             'is_read',
             'path',
             'poll',
             'subscription',
-
             'api',
             'url',
         )
@@ -113,10 +110,12 @@ class ThreadSerializer(serializers.ModelSerializer):
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.last_poster_slug,
-                'pk': obj.last_poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.last_poster_slug,
+                    'pk': obj.last_poster_id,
+                }
+            )
         else:
             return None
 
@@ -141,7 +140,6 @@ class PrivateThreadSerializer(ThreadSerializer):
             'is_hidden',
             'is_closed',
             'weight',
-
             'acl',
             'is_new',
             'is_read',
@@ -149,7 +147,6 @@ class PrivateThreadSerializer(ThreadSerializer):
             'path',
             'poll',
             'subscription',
-
             'api',
             'url',
         )
@@ -182,13 +179,11 @@ class ThreadsListSerializer(ThreadSerializer):
             'is_unapproved',
             'is_hidden',
             'is_closed',
-
             'acl',
             'is_new',
             'is_read',
             'subscription',
             'top_category',
-
             'api',
             'url',
         )

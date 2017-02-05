@@ -13,8 +13,7 @@ from ...forms.options import ChangeEmailForm
 def change_email_endpoint(request, pk=None):
     form = ChangeEmailForm(request.data, user=request.user)
     if form.is_valid():
-        token = store_new_credential(
-            request, 'email', form.cleaned_data['new_email'])
+        token = store_new_credential(request, 'email', form.cleaned_data['new_email'])
 
         mail_subject = _("Confirm e-mail change on %(forum_name)s forums")
         mail_subject = mail_subject % {'forum_name': settings.forum_name}
@@ -22,9 +21,10 @@ def change_email_endpoint(request, pk=None):
         # swap address with new one so email is sent to new address
         request.user.email = form.cleaned_data['new_email']
 
-        mail_user(request, request.user, mail_subject,
-                  'misago/emails/change_email',
-                  {'token': token})
+        mail_user(
+            request, request.user, mail_subject, 'misago/emails/change_email',
+            {'token': token}
+        )
 
         message = _("E-mail change confirmation link was sent to new address.")
         return Response({'detail': message})

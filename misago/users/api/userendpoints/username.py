@@ -40,7 +40,7 @@ def change_username(request):
             'detail': _("You can't change your username now."),
             'options': options
         },
-        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     form = ChangeUsernameForm(request.data, user=request.user)
     if form.is_valid():
@@ -56,10 +56,9 @@ def change_username(request):
                 'detail': _("Error changing username. Please try again."),
                 'options': options
             },
-            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response({'detail': form.non_field_errors()[0]},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': form.non_field_errors()[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def moderate_username_endpoint(request, profile):
@@ -77,9 +76,11 @@ def moderate_username_endpoint(request, profile):
                     'detail': _("Error changing username. Please try again."),
                     'options': options
                 },
-                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'detail': form.non_field_errors()[0]},
+            return Response({
+                'detail': form.non_field_errors()[0]
+            },
                             status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({

@@ -12,6 +12,7 @@ def copy_value(setting):
         setting_obj.value = old_value
         setting_obj.save()
         return setting_obj
+
     return closure
 
 
@@ -21,6 +22,7 @@ def map_value(setting, translation):
         setting_obj.value = translation[old_value]
         setting_obj.save()
         return setting_obj
+
     return closure
 
 
@@ -44,24 +46,28 @@ SETTING_CONVERTER = {
     'thread_name_min': copy_value('thread_title_length_min'),
     'thread_name_max': copy_value('thread_title_length_max'),
     'post_length_min': copy_value('post_length_min'),
-    'account_activation': map_value('account_activation', {
-        'none': 'none',
-        'user': 'user',
-        'admin': 'admin',
-        'block': 'closed',
-    }),
+    'account_activation': map_value(
+        'account_activation', {
+            'none': 'none',
+            'user': 'user',
+            'admin': 'admin',
+            'block': 'closed',
+        }
+    ),
     'username_length_min': copy_value('username_length_min'),
     'username_length_max': copy_value('username_length_max'),
     'password_length': copy_value('password_length_min'),
     'avatars_types': convert_allow_custom_avatars,
     'default_avatar': copy_value('default_avatar'),
     'upload_limit': copy_value('avatar_upload_limit'),
-    'subscribe_start': map_value('subscribe_start', {
+    'subscribe_start':
+    map_value('subscribe_start', {
         '0': 'no',
         '1': 'watch',
         '2': 'watch_email',
     }),
-    'subscribe_reply': map_value('subscribe_reply', {
+    'subscribe_reply':
+    map_value('subscribe_reply', {
         '0': 'no',
         '1': 'watch',
         '2': 'watch_email',

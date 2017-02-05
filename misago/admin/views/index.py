@@ -14,7 +14,6 @@ from misago.users.models import ACTIVATION_REQUIRED_NONE, User
 
 from . import render
 
-
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
 
 
@@ -27,10 +26,11 @@ def admin_index(request):
         'inactive_users': User.objects.filter(**inactive_users).count()
     }
 
-    return render(request, 'misago/admin/index.html', {
-        'db_stats': db_stats,
-        'version_check': cache.get(VERSION_CHECK_CACHE_KEY)
-    })
+    return render(
+        request, 'misago/admin/index.html',
+        {'db_stats': db_stats,
+         'version_check': cache.get(VERSION_CHECK_CACHE_KEY)}
+    )
 
 
 def check_version(request):
@@ -52,15 +52,9 @@ def check_version(request):
             for i in range(3):
                 if latest[i] > current[i]:
                     message = _("Outdated: %(current)s < %(latest)s")
-                    formats = {
-                        'latest': latest_version,
-                        'current': __version__
-                    }
+                    formats = {'latest': latest_version, 'current': __version__}
 
-                    version = {
-                        'is_error': True,
-                        'message': message % formats
-                    }
+                    version = {'is_error': True, 'message': message % formats}
                     break
             else:
                 formats = {'current': __version__}
@@ -72,8 +66,5 @@ def check_version(request):
             cache.set(VERSION_CHECK_CACHE_KEY, version, 180)
         except (RequestException, IndexError, KeyError, ValueError):
             message = _("Failed to connect to GitHub API. Try again later.")
-            version = {
-                'is_error': True,
-                'message': message
-            }
+            version = {'is_error': True, 'message': message}
     return JsonResponse(version)

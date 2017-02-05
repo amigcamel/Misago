@@ -10,11 +10,11 @@ from misago.acl.models import Role
 from misago.core.forms import YesNoSwitch
 
 from ..models import Poll, Thread
-
-
 """
 Admin Permissions Forms
 """
+
+
 class RolePermissionsForm(forms.Form):
     legend = _("Polls")
 
@@ -22,31 +22,19 @@ class RolePermissionsForm(forms.Form):
         label=_("Can start polls"),
         coerce=int,
         initial=0,
-        choices=(
-            (0, _("No")),
-            (1, _("Own threads")),
-            (2, _("All threads"))
-        )
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")))
     )
     can_edit_polls = forms.TypedChoiceField(
         label=_("Can edit polls"),
         coerce=int,
         initial=0,
-        choices=(
-            (0, _("No")),
-            (1, _("Own polls")),
-            (2, _("All polls"))
-        )
+        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")))
     )
     can_delete_polls = forms.TypedChoiceField(
         label=_("Can delete polls"),
         coerce=int,
         initial=0,
-        choices=(
-            (0, _("No")),
-            (1, _("Own polls")),
-            (2, _("All polls"))
-        )
+        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")))
     )
     poll_edit_time = forms.IntegerField(
         label=_("Time limit for own polls edits, in minutes"),
@@ -70,6 +58,8 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
+
+
 def build_acl(acl, roles, key_name):
     acl.update({
         'can_start_polls': 0,
@@ -79,7 +69,10 @@ def build_acl(acl, roles, key_name):
         'can_always_see_poll_voters': 0
     })
 
-    return algebra.sum_acls(acl, roles=roles, key=key_name,
+    return algebra.sum_acls(
+        acl,
+        roles=roles,
+        key=key_name,
         can_start_polls=algebra.greater,
         can_edit_polls=algebra.greater,
         can_delete_polls=algebra.greater,
@@ -91,6 +84,8 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
+
+
 def add_acl_to_poll(user, poll):
     poll.acl.update({
         'can_vote': can_vote_poll(user, poll),
@@ -101,9 +96,7 @@ def add_acl_to_poll(user, poll):
 
 
 def add_acl_to_thread(user, thread):
-    thread.acl.update({
-        'can_start_poll': can_start_poll(user, thread)
-    })
+    thread.acl.update({'can_start_poll': can_start_poll(user, thread)})
 
 
 def register_with(registry):
@@ -114,13 +107,13 @@ def register_with(registry):
 """
 ACL tests
 """
+
+
 def allow_start_poll(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to start polls."))
 
-    category_acl = user.acl['categories'].get(target.category_id, {
-        'can_close_threads': False,
-    })
+    category_acl = user.acl['categories'].get(target.category_id, {'can_close_threads': False, })
 
     if not user.acl.get('can_start_polls'):
         raise PermissionDenied(_("You can't start polls."))
@@ -132,6 +125,8 @@ def allow_start_poll(user, target):
             raise PermissionDenied(_("This category is closed. You can't start polls in it."))
         if target.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't start polls in it."))
+
+
 can_start_poll = return_boolean(allow_start_poll)
 
 
@@ -139,9 +134,7 @@ def allow_edit_poll(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to edit polls."))
 
-    category_acl = user.acl['categories'].get(target.category_id, {
-        'can_close_threads': False,
-    })
+    category_acl = user.acl['categories'].get(target.category_id, {'can_close_threads': False, })
 
     if not user.acl.get('can_edit_polls'):
         raise PermissionDenied(_("You can't edit polls."))
@@ -153,7 +146,8 @@ def allow_edit_poll(user, target):
             message = ungettext(
                 "You can't edit polls that are older than %(minutes)s minute.",
                 "You can't edit polls that are older than %(minutes)s minutes.",
-                user.acl['poll_edit_time'])
+                user.acl['poll_edit_time']
+            )
             raise PermissionDenied(message % {'minutes': user.acl['poll_edit_time']})
 
         if target.is_over:
@@ -164,6 +158,8 @@ def allow_edit_poll(user, target):
             raise PermissionDenied(_("This category is closed. You can't edit polls in it."))
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't edit polls in it."))
+
+
 can_edit_poll = return_boolean(allow_edit_poll)
 
 
@@ -171,9 +167,7 @@ def allow_delete_poll(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to delete polls."))
 
-    category_acl = user.acl['categories'].get(target.category_id, {
-        'can_close_threads': False,
-    })
+    category_acl = user.acl['categories'].get(target.category_id, {'can_close_threads': False, })
 
     if not user.acl.get('can_delete_polls'):
         raise PermissionDenied(_("You can't delete polls."))
@@ -185,7 +179,8 @@ def allow_delete_poll(user, target):
             message = ungettext(
                 "You can't delete polls that are older than %(minutes)s minute.",
                 "You can't delete polls that are older than %(minutes)s minutes.",
-                user.acl['poll_edit_time'])
+                user.acl['poll_edit_time']
+            )
             raise PermissionDenied(message % {'minutes': user.acl['poll_edit_time']})
         if target.is_over:
             raise PermissionDenied(_("This poll is over. You can't delete it."))
@@ -195,6 +190,8 @@ def allow_delete_poll(user, target):
             raise PermissionDenied(_("This category is closed. You can't delete polls in it."))
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't delete polls in it."))
+
+
 can_delete_poll = return_boolean(allow_delete_poll)
 
 
@@ -207,21 +204,23 @@ def allow_vote_poll(user, target):
     if target.is_over:
         raise PermissionDenied(_("This poll is over. You can't vote in it."))
 
-    category_acl = user.acl['categories'].get(target.category_id, {
-        'can_close_threads': False,
-    })
+    category_acl = user.acl['categories'].get(target.category_id, {'can_close_threads': False, })
 
     if not category_acl.get('can_close_threads'):
         if target.category.is_closed:
             raise PermissionDenied(_("This category is closed. You can't vote in it."))
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't vote in it."))
+
+
 can_vote_poll = return_boolean(allow_vote_poll)
 
 
 def allow_see_poll_votes(user, target):
     if not target.is_public and not user.acl['can_always_see_poll_voters']:
         raise PermissionDenied(_("You dont have permission to this poll's voters."))
+
+
 can_see_poll_votes = return_boolean(allow_see_poll_votes)
 
 

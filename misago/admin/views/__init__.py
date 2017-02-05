@@ -7,7 +7,6 @@ from .. import site
 from ..auth import is_admin_session, update_admin_session
 from .auth import login
 
-
 __ALL__ = ['get_protected_namespace', 'render', 'protected_admin_view']
 
 

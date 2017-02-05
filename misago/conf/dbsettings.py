@@ -1,6 +1,5 @@
 from misago.core import threadstore
 
-
 CACHE_KEY = 'misago_db_settings'
 
 

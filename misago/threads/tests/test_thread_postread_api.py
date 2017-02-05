@@ -10,16 +10,12 @@ class PostReadApiTests(ThreadsApiTestCase):
     def setUp(self):
         super(PostReadApiTests, self).setUp()
 
-        self.post = testutils.reply_thread(
-            self.thread,
-            poster=self.user,
-            posted_on=timezone.now()
-        )
+        self.post = testutils.reply_thread(self.thread, poster=self.user, posted_on=timezone.now())
 
-        self.api_link = reverse('misago:api:thread-post-read', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.post.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-read', kwargs={'thread_pk': self.thread.pk,
+                                                   'pk': self.post.pk}
+        )
 
     def test_read_anonymous(self):
         """api validates if reading user is authenticated"""
@@ -61,4 +57,3 @@ class PostReadApiTests(ThreadsApiTestCase):
 
         subscription = self.thread.subscription_set.order_by('id').last()
         self.assertEqual(subscription.last_read_on, self.post.posted_on)
-

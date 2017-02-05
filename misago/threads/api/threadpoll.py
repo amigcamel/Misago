@@ -12,14 +12,11 @@ from misago.core.shortcuts import get_int_or_404
 
 from ..models import Poll
 from ..permissions.polls import (
-    allow_delete_poll,
-    allow_edit_poll,
-    allow_see_poll_votes,
-    allow_start_poll,
-    can_start_poll
+    allow_delete_poll, allow_edit_poll, allow_see_poll_votes, allow_start_poll, can_start_poll
 )
 from ..serializers import (
-    EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer)
+    EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer
+)
 from ..viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
@@ -117,9 +114,7 @@ class ViewSet(viewsets.ViewSet):
         thread.has_poll = False
         thread.save()
 
-        return Response({
-            'can_start_poll': can_start_poll(request.user, thread)
-        })
+        return Response({'can_start_poll': can_start_poll(request.user, thread)})
 
     @detail_route(methods=['get', 'post'])
     def votes(self, request, thread_pk, pk):
@@ -157,7 +152,8 @@ class ViewSet(viewsets.ViewSet):
             choices.append(choice)
 
         queryset = thread.poll.pollvote_set.values(
-            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash')
+            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash'
+        )
 
         for voter in queryset.order_by('voter_name').iterator():
             voters[voter['choice_hash']].append(PollVoteSerializer(voter).data)

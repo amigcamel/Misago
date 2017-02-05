@@ -4,16 +4,15 @@ from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.threads.signals import move_thread
 
-
 all_read = Signal()
 category_read = Signal(providing_args=["category"])
 thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
-
-
 """
 Signal handlers
 """
+
+
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
     sender.categoryread_set.all().delete()

@@ -10,8 +10,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         super(SyncUnreadPrivateThreadsTestCase, self).setUp()
 
         User = get_user_model()
-        self.other_user = User.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123')
+        self.other_user = User.objects.create_user('BobBoberson', 'bob@boberson.com', 'pass123')
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
 

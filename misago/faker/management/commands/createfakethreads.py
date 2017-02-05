@@ -18,7 +18,6 @@ from misago.threads.models import Post, Thread
 
 from ...englishcorpus import EnglishCorpus
 
-
 PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'
 
 corpus = EnglishCorpus()
@@ -30,11 +29,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'threads',
-            help="number of threads to create",
-            nargs='?',
-            type=int,
-            default=5
+            'threads', help="number of threads to create", nargs='?', type=int, default=5
         )
 
     def handle(self, *args, **options):
@@ -161,8 +156,7 @@ class Command(BaseCommand):
                 thread.save()
 
                 created_threads += 1
-                show_progress(
-                    self, created_threads, items_to_create, start_time)
+                show_progress(self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)

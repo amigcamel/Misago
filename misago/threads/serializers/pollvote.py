@@ -12,9 +12,7 @@ class PollVoteSerializer(serializers.Serializer):
     class Meta:
         fields = (
             'voted_on',
-
             'username',
-
             'url',
         )
 
@@ -23,7 +21,9 @@ class PollVoteSerializer(serializers.Serializer):
 
     def get_url(self, obj):
         if obj['voter_id']:
-            return reverse('misago:user', kwargs={
-                'pk': obj['voter_id'],
-                'slug': obj['voter_slug'],
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'pk': obj['voter_id'],
+                    'slug': obj['voter_slug'],
+                }
+            )

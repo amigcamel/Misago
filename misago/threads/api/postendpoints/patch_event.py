@@ -6,7 +6,6 @@ from misago.core.apipatch import ApiPatch
 
 from ...moderation import posts as moderation
 
-
 event_patch_dispatcher = ApiPatch()
 
 
@@ -17,6 +16,8 @@ def patch_acl(request, event, value):
         return {'acl': event.acl}
     else:
         return {'acl': None}
+
+
 event_patch_dispatcher.add('acl', patch_acl)
 
 
@@ -30,6 +31,8 @@ def patch_is_hidden(request, event, value):
         return {'is_hidden': event.is_hidden}
     else:
         raise PermissionDenied(_("You don't have permission to hide this event."))
+
+
 event_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 

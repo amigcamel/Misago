@@ -12,7 +12,7 @@ def create_default_roles(apps, schema_editor):
         name=_("Member"),
         special_role='authenticated',
         permissions={
-            # account
+    # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 2,
                 'name_changes_expire': 180,
@@ -21,7 +21,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles
+    # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -33,19 +33,19 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # attachments
+    # attachments
             'misago.threads.permissions.attachments': {
                 'max_attachment_size': 4 * 1024,
                 'can_download_other_users_attachments': True,
             },
 
-            # polls
+    # polls
             'misago.threads.permissions.polls': {
                 'can_start_polls': 1,
                 'can_edit_polls': 1
             },
 
-            # search
+    # search
             'misago.search.permissions': {
                 'can_search': 1,
             },
@@ -56,7 +56,7 @@ def create_default_roles(apps, schema_editor):
         name=_("Guest"),
         special_role='anonymous',
         permissions={
-            # account
+    # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 0,
                 'name_changes_expire': 0,
@@ -65,7 +65,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles
+    # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -75,12 +75,12 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # attachments
+    # attachments
             'misago.threads.permissions.attachments': {
                 'can_download_other_users_attachments': True,
             },
 
-            # search
+    # search
             'misago.search.permissions': {
                 'can_search': 1,
             },
@@ -90,7 +90,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Moderator"),
         permissions={
-            # account
+    # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 5,
                 'name_changes_expire': 14,
@@ -99,7 +99,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles
+    # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -111,14 +111,14 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 1,
             },
 
-            # attachments
+    # attachments
             'misago.threads.permissions.attachments': {
                 'max_attachment_size': 8 * 1024,
                 'can_download_other_users_attachments': True,
                 'can_delete_other_users_attachments': True,
             },
 
-            # polls
+    # polls
             'misago.threads.permissions.polls': {
                 'can_start_polls': 2,
                 'can_edit_polls': 2,
@@ -126,7 +126,7 @@ def create_default_roles(apps, schema_editor):
                 'can_always_see_poll_voters': 1
             },
 
-            # moderation
+    # moderation
             'misago.threads.permissions.threads': {
                 'can_see_unapproved_content_lists': True,
                 'can_see_reported_content_lists': True,
@@ -138,7 +138,7 @@ def create_default_roles(apps, schema_editor):
                 'can_moderate_signatures': 1,
             },
 
-            # delete users
+    # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
@@ -149,7 +149,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Renaming users"),
         permissions={
-            # rename users
+    # rename users
             'misago.users.permissions.moderation': {
                 'can_rename_users': 1,
             },
@@ -159,11 +159,10 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Banning users"),
         permissions={
-            # ban users
+    # ban users
             'misago.users.permissions.profiles': {
                 'can_see_ban_details': 1,
             },
-
             'misago.users.permissions.moderation': {
                 'can_ban_users': 1,
                 'max_ban_length': 14,
@@ -176,7 +175,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Deleting users"),
         permissions={
-            # delete users
+    # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 3,
                 'can_delete_users_with_less_posts_than': 7,
@@ -187,7 +186,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Can't be blocked"),
         permissions={
-            # profiles
+    # profiles
             'misago.users.permissions.profiles': {
                 'can_be_blocked': 0,
             },
@@ -197,7 +196,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Private threads"),
         permissions={
-            # private threads
+    # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
                 'can_start_private_threads': 1,
@@ -212,7 +211,7 @@ def create_default_roles(apps, schema_editor):
     Role.objects.create(
         name=_("Private threads moderator"),
         permissions={
-            # private threads
+    # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
                 'can_start_private_threads': 1,
@@ -227,10 +226,6 @@ def create_default_roles(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_acl', '0002_acl_version_tracker'),
-    ]
+    dependencies = [('misago_acl', '0002_acl_version_tracker'), ]
 
-    operations = [
-        migrations.RunPython(create_default_roles),
-    ]
+    operations = [migrations.RunPython(create_default_roles), ]

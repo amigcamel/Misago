@@ -8,6 +8,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
     """
     tests for user change password RPC (/api/users/1/change-password/)
     """
+
     def setUp(self):
         super(UserChangePasswordTests, self).setUp()
         self.link = '/api/users/%s/change-password/' % self.user.pk
@@ -19,10 +20,10 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
 
     def test_change_email(self):
         """api allows users to change their passwords"""
-        response = self.client.post(self.link, data={
-            'new_password': 'N3wP@55w0rd',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_password': 'N3wP@55w0rd',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertIn('Confirm password change', mail.outbox[0].subject)
@@ -35,22 +36,22 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
 
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
-        response = self.client.post(self.link, data={
-            'new_password': 'N3wP@55w0rd',
-            'password': 'Lor3mIpsum'
-        })
+        response = self.client.post(
+            self.link, data={'new_password': 'N3wP@55w0rd',
+                             'password': 'Lor3mIpsum'}
+        )
         self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
-        response = self.client.post(self.link, data={
-            'new_password': '',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_password': '',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertContains(response, 'new_password":["This field is required', status_code=400)
 
-        response = self.client.post(self.link, data={
-            'new_password': 'n',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_password': 'n',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertContains(response, 'password must be', status_code=400)

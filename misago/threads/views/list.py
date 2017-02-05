@@ -63,9 +63,7 @@ class ForumThreads(ListBase):
     template_name = 'misago/threadslist/threads.html'
 
     def get_default_frontend_context(self):
-        return {
-            'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
-        }
+        return {'MERGE_THREADS_API': reverse('misago:api:thread-merge'), }
 
 
 class CategoryThreads(ForumThreads):
@@ -76,7 +74,7 @@ class CategoryThreads(ForumThreads):
     def get_category(self, request, **kwargs):
         category = super(CategoryThreads, self).get_category(request, **kwargs)
         if not category.level:
-            raise Http404() # disallow root category access
+            raise Http404()    # disallow root category access
         return category
 
 

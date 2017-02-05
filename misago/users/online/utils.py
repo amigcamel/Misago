@@ -5,7 +5,6 @@ from django.utils import timezone
 from ..bans import get_user_ban
 from ..models import BanCache, Online
 
-
 ACTIVITY_CUTOFF = timedelta(minutes=2)
 
 
@@ -17,7 +16,6 @@ def get_user_status(viewer, user):
         'is_offline_hidden': False,
         'is_online': False,
         'is_offline': False,
-
         'banned_until': None,
         'last_click': user.last_login or user.joined_on,
     }

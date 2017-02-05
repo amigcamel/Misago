@@ -161,7 +161,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertEqual(self.thread.replies, 3)
 
-         # add event post
+        # add event post
         event = Post.objects.create(
             category=self.category,
             thread=self.thread,
@@ -291,7 +291,9 @@ class ThreadModelTests(TestCase):
         Category(
             name='New Category',
             slug='new-category',
-        ).insert_at(root_category, position='last-child', save=True)
+        ).insert_at(
+            root_category, position='last-child', save=True
+        )
         new_category = Category.objects.get(slug='new-category')
 
         self.thread.move(new_category)
@@ -351,10 +353,8 @@ class ThreadModelTests(TestCase):
         when there are no participants left in it
         """
         User = get_user_model()
-        user_a = User.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
-        user_b = User.objects.create_user(
-            "Weebl", "weebl@weeblson.com", "Pass.123")
+        user_a = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user_b = User.objects.create_user("Weebl", "weebl@weeblson.com", "Pass.123")
 
         ThreadParticipant.objects.add_participants(self.thread, [user_a, user_b])
         self.assertEqual(self.thread.participants.count(), 2)

@@ -10,7 +10,6 @@ from misago.conf import settings
 from ...permissions.threads import allow_move_post, exclude_invisible_posts
 from ...utils import get_thread_id_from_url
 
-
 MOVE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
@@ -54,7 +53,11 @@ def clean_thread_for_move(request, thread, viewmodel):
     try:
         new_thread = viewmodel(request, new_thread_id, select_for_update=True).unwrap()
     except Http404:
-        raise PermissionDenied(_("The thread you have entered link to doesn't exist or you don't have permission to see it."))
+        raise PermissionDenied(
+            _(
+                "The thread you have entered link to doesn't exist or you don't have permission to see it."
+            )
+        )
 
     if not new_thread.acl['can_reply']:
         raise PermissionDenied(_("You can't move posts to threads you can't reply."))
@@ -73,8 +76,8 @@ def clean_posts_for_move(request, thread):
     elif len(posts_ids) > MOVE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be moved at single time.",
-            "No more than %(limit)s posts can be moved at single time.",
-            MOVE_LIMIT)
+            "No more than %(limit)s posts can be moved at single time.", MOVE_LIMIT
+        )
         raise PermissionDenied(message % {'limit': MOVE_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)

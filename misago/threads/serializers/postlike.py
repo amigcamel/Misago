@@ -4,10 +4,7 @@ from rest_framework import serializers
 
 from ..models import PostLike
 
-
-__all__ = [
-    'PostLikeSerializer',
-]
+__all__ = ['PostLikeSerializer', ]
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
@@ -21,10 +18,8 @@ class PostLikeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'liked_on',
-
             'liker_id',
             'username',
-
             'url',
         )
 
@@ -36,9 +31,11 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         if obj['liker_id']:
-            return reverse('misago:user', kwargs={
-                'slug': obj['liker_slug'],
-                'pk': obj['liker_id'],
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj['liker_slug'],
+                    'pk': obj['liker_id'],
+                }
+            )
         else:
             return None

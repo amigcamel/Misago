@@ -21,19 +21,22 @@ class UserTestCase(MisagoTestCase):
 
     def get_authenticated_user(self):
         User = get_user_model()
-        return User.objects.create_user(
-            "TestUser", "test@user.com", self.USER_PASSWORD)
+        return User.objects.create_user("TestUser", "test@user.com", self.USER_PASSWORD)
 
     def get_superuser(self):
         User = get_user_model()
         return User.objects.create_superuser(
-            "TestSuperUser", "test@superuser.com", self.USER_PASSWORD)
+            "TestSuperUser", "test@superuser.com", self.USER_PASSWORD
+        )
 
     def login_user(self, user, password=None):
-        self.client.post('/api/auth/', data={
-            'username': user.email,
-            'password': password or self.USER_PASSWORD,
-        })
+        self.client.post(
+            '/api/auth/',
+            data={
+                'username': user.email,
+                'password': password or self.USER_PASSWORD,
+            }
+        )
         self.client.get(reverse('misago:index'))
 
     def logout_user(self):

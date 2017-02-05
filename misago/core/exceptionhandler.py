@@ -9,7 +9,6 @@ from rest_framework.views import exception_handler as rest_exception_handler
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
 
-
 HANDLED_EXCEPTIONS = (AjaxError, Banned, ExplicitFirstPage, Http404, OutdatedSlug, PermissionDenied)
 
 
@@ -78,8 +77,7 @@ def get_exception_handler(exception):
         if isinstance(exception, exception_type):
             return handler
     else:
-        raise ValueError(
-            "%s is not Misago exception" % exception.__class__.__name__)
+        raise ValueError("%s is not Misago exception" % exception.__class__.__name__)
 
 
 def handle_misago_exception(request, exception):

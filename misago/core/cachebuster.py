@@ -2,7 +2,6 @@ from django.db.models import F
 
 from . import threadstore
 
-
 CACHE_KEY = 'misago_cachebuster'
 
 
@@ -65,8 +64,7 @@ class CacheBusterController(object):
         from .models import CacheVersion
 
         self.cache[cache] += 1
-        CacheVersion.objects.filter(cache=cache).update(
-            version=F('version') + 1)
+        CacheVersion.objects.filter(cache=cache).update(version=F('version') + 1)
         default_cache.delete(CACHE_KEY)
 
     def invalidate_all(self):

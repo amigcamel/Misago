@@ -1,15 +1,20 @@
 import six
 
 from django.http import Http404
-from django.shortcuts import *  # noqa
+from django.shortcuts import *    # noqa
 
 from rest_framework.response import Response
 
 
-def paginate(object_list, page, per_page, orphans=0,
-             allow_empty_first_page=True,
-             allow_explicit_first_page=False,
-             paginator=None):
+def paginate(
+        object_list,
+        page,
+        per_page,
+        orphans=0,
+        allow_empty_first_page=True,
+        allow_explicit_first_page=False,
+        paginator=None
+):
     from django.core.paginator import Paginator, EmptyPage, InvalidPage
     from .exceptions import ExplicitFirstPage
 
@@ -22,8 +27,8 @@ def paginate(object_list, page, per_page, orphans=0,
 
     try:
         return paginator(
-            object_list, per_page, orphans=orphans,
-            allow_empty_first_page=allow_empty_first_page).page(page)
+            object_list, per_page, orphans=orphans, allow_empty_first_page=allow_empty_first_page
+        ).page(page)
     except (EmptyPage, InvalidPage) as e:
         raise Http404()
 
@@ -63,9 +68,7 @@ def paginated_response(page, serializer=None, data=None, extra=None):
     if serializer:
         results = serializer(results, many=True).data
 
-    response_data.update({
-        'results': results
-    })
+    response_data.update({'results': results})
 
     if extra:
         response_data.update(extra)

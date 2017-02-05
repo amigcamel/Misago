@@ -7,7 +7,6 @@ from . import signals
 from .dates import get_cutoff_date, is_date_tracked
 from .models import CategoryRead
 
-
 __all__ = ['make_read_aware', 'sync_record']
 
 
@@ -27,9 +26,7 @@ def make_read_aware(user, categories):
             categories_dict[category.pk] = category
 
     if categories_dict:
-        categories_records = user.categoryread_set.filter(
-            category__in=categories_dict.keys()
-        )
+        categories_records = user.categoryread_set.filter(category__in=categories_dict.keys())
 
         for record in categories_records:
             category = categories_dict[record.category_id]
@@ -64,8 +61,7 @@ def sync_record(user, category):
         category_record = None
 
     all_threads = category.thread_set.filter(last_post_on__gt=cutoff_date)
-    all_threads_count = exclude_invisible_threads(
-        user, [category], all_threads).count()
+    all_threads_count = exclude_invisible_threads(user, [category], all_threads).count()
 
     read_threads_count = user.threadread_set.filter(
         category=category,
@@ -90,10 +86,7 @@ def sync_record(user, category):
             last_read_on = timezone.now()
         else:
             last_read_on = cutoff_date
-        category_record = user.categoryread_set.create(
-            category=category,
-            last_read_on=last_read_on
-        )
+        category_record = user.categoryread_set.create(category=category, last_read_on=last_read_on)
 
 
 def read_category(user, category):

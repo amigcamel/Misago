@@ -17,6 +17,4 @@ class Migration(migrations.Migration):
         ('misago_core', '0001_initial'),
     ]
 
-    operations = [
-        migrations.RunPython(register_bans_version_tracker),
-    ]
+    operations = [migrations.RunPython(register_bans_version_tracker), ]

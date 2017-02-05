@@ -13,6 +13,4 @@ def categories(request):
         'CATEGORIES_API': reverse('misago:api:category-list')
     })
 
-    return render(request, 'misago/categories/list.html', {
-        'categories': categories_tree,
-    })
+    return render(request, 'misago/categories/list.html', {'categories': categories_tree, })

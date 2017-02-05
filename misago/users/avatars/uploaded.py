@@ -11,7 +11,6 @@ from misago.conf import settings
 
 from . import store
 
-
 ALLOWED_EXTENSIONS = ('.gif', '.png', '.jpg', '.jpeg')
 ALLOWED_MIME_TYPES = ('image/gif', 'image/jpeg', 'image/png', 'image/mpo')
 
@@ -41,8 +40,7 @@ def validate_dimensions(uploaded_file):
 
     min_size = max(settings.MISAGO_AVATARS_SIZES)
     if min(image.size) < min_size:
-        message = _("Uploaded image should be at "
-                    "least %(size)s pixels tall and wide.")
+        message = _("Uploaded image should be at " "least %(size)s pixels tall and wide.")
         raise ValidationError(message % {'size': min_size})
 
     if image.size[0] * image.size[1] > 2000 * 3000:
@@ -85,7 +83,6 @@ def clean_crop(image, crop):
         crop_dict = {
             'x': float(crop['offset']['x']),
             'y': float(crop['offset']['y']),
-
             'zoom': float(crop['zoom']),
         }
     except (KeyError, TypeError, ValueError):

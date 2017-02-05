@@ -11,7 +11,6 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from .. import testutils
 from ..models import Attachment, AttachmentType
 
-
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, 'small.jpg')
@@ -28,14 +27,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         self.api_link = reverse('misago:api:attachment-list')
 
-        self.attachment_type_jpg = AttachmentType.objects.create(
-            name="JPG",
-            extensions='jpeg,jpg'
-        )
-        self.attachment_type_pdf = AttachmentType.objects.create(
-            name="PDF",
-            extensions='pdf'
-        )
+        self.attachment_type_jpg = AttachmentType.objects.create(name="JPG", extensions='jpeg,jpg')
+        self.attachment_type_pdf = AttachmentType.objects.create(name="PDF", extensions='pdf')
 
         self.override_acl()
 
@@ -49,9 +42,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
     def upload_document(self, is_orphaned=False, by_other_user=False):
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={
-                'upload': upload
-            })
+            response = self.client.post(self.api_link, data={'upload': upload})
         self.assertEqual(response.status_code, 200)
 
         attachment = Attachment.objects.order_by('id').last()
@@ -69,9 +60,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
     def upload_image(self):
         with open(TEST_SMALLJPG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={
-                'upload': upload
-            })
+            response = self.client.post(self.api_link, data={'upload': upload})
         self.assertEqual(response.status_code, 200)
 
         attachment = Attachment.objects.order_by('id').last()
@@ -95,10 +84,10 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
     def test_nonexistant_file(self):
         """user tries to retrieve nonexistant file"""
-        response = self.client.get(reverse('misago:attachment', kwargs={
-            'pk': 123,
-            'secret': 'qwertyuiop'
-        }))
+        response = self.client.get(
+            reverse('misago:attachment', kwargs={'pk': 123,
+                                                 'secret': 'qwertyuiop'})
+        )
 
         self.assertIs404(response)
 
@@ -106,10 +95,10 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         """user tries to retrieve existing file using invalid secret"""
         attachment = self.upload_document()
 
-        response = self.client.get(reverse('misago:attachment', kwargs={
-            'pk': attachment.pk,
-            'secret': 'qwertyuiop'
-        }))
+        response = self.client.get(
+            reverse('misago:attachment', kwargs={'pk': attachment.pk,
+                                                 'secret': 'qwertyuiop'})
+        )
 
         self.assertIs404(response)
 
@@ -136,10 +125,13 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         """user tries to retrieve thumbnail from non-image attachment"""
         attachment = self.upload_document()
 
-        response = self.client.get(reverse('misago:attachment-thumbnail', kwargs={
-            'pk': attachment.pk,
-            'secret': attachment.secret
-        }))
+        response = self.client.get(
+            reverse(
+                'misago:attachment-thumbnail',
+                kwargs={'pk': attachment.pk,
+                        'secret': attachment.secret}
+            )
+        )
         self.assertIs404(response)
 
     def test_no_role(self):

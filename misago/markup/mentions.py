@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup, NavigableString
 from django.contrib.auth import get_user_model
 from django.utils import six
 
-
 SUPPORTED_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p')
 USERNAME_RE = re.compile(r'@[0-9a-z]+', re.IGNORECASE)
 MENTIONS_LIMIT = 24

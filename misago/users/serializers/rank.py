@@ -4,7 +4,6 @@ from misago.core.utils import format_plaintext_for_html
 
 from ..models import Rank
 
-
 __all__ = ['RankSerializer']
 
 

@@ -8,11 +8,7 @@ from misago.core.exceptions import Banned
 from ..bans import get_request_ip_ban
 from ..models import BAN_IP, Ban
 
-
-__all__ = [
-    'UnbannedOnly',
-    'UnbannedAnonOnly'
-]
+__all__ = ['UnbannedOnly', 'UnbannedAnonOnly']
 
 
 class UnbannedOnly(BasePermission):
@@ -20,9 +16,8 @@ class UnbannedOnly(BasePermission):
         ban = get_request_ip_ban(request)
         if ban:
             hydrated_ban = Ban(
-                check_type=BAN_IP,
-                user_message=ban['message'],
-                expires_on=ban['expires_on'])
+                check_type=BAN_IP, user_message=ban['message'], expires_on=ban['expires_on']
+            )
             raise Banned(hydrated_ban)
 
     def has_permission(self, request, view):

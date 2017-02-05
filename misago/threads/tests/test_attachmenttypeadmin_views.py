@@ -38,12 +38,15 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         response = self.client.post(form_link, data={})
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(form_link, data={
-            'name': 'Test type',
-            'extensions': '.test',
-            'size_limit': 0,
-            'status': AttachmentType.ENABLED,
-        })
+        response = self.client.post(
+            form_link,
+            data={
+                'name': 'Test type',
+                'extensions': '.test',
+                'size_limit': 0,
+                'status': AttachmentType.ENABLED,
+            }
+        )
         self.assertEqual(response.status_code, 302)
 
         # clean alert about new item created
@@ -56,17 +59,22 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
     def test_edit_view(self):
         """edit attachment type view has no showstoppers"""
-        self.client.post(reverse('misago:admin:system:attachment-types:new'), data={
-            'name': 'Test type',
-            'extensions': '.test',
-            'size_limit': 0,
-            'status': AttachmentType.ENABLED,
-        })
+        self.client.post(
+            reverse('misago:admin:system:attachment-types:new'),
+            data={
+                'name': 'Test type',
+                'extensions': '.test',
+                'size_limit': 0,
+                'status': AttachmentType.ENABLED,
+            }
+        )
 
         test_type = AttachmentType.objects.order_by('id').last()
         self.assertEqual(test_type.name, 'Test type')
 
-        form_link = reverse('misago:admin:system:attachment-types:edit', kwargs={'pk': test_type.pk})
+        form_link = reverse(
+            'misago:admin:system:attachment-types:edit', kwargs={'pk': test_type.pk}
+        )
 
         response = self.client.get(form_link)
         self.assertEqual(response.status_code, 200)
@@ -74,15 +82,18 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         response = self.client.post(form_link, data={})
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(form_link, data={
-            'name': 'Test type edited',
-            'extensions': '.test.extension',
-            'mimetypes': 'test/edited-mime',
-            'size_limit': 512,
-            'status': AttachmentType.DISABLED,
-            'limit_uploads_to': [r.pk for r in Role.objects.all()],
-            'limit_downloads_to': [r.pk for r in Role.objects.all()],
-        })
+        response = self.client.post(
+            form_link,
+            data={
+                'name': 'Test type edited',
+                'extensions': '.test.extension',
+                'mimetypes': 'test/edited-mime',
+                'size_limit': 512,
+                'status': AttachmentType.DISABLED,
+                'limit_uploads_to': [r.pk for r in Role.objects.all()],
+                'limit_downloads_to': [r.pk for r in Role.objects.all()],
+            }
+        )
         self.assertEqual(response.status_code, 302)
 
         test_type = AttachmentType.objects.order_by('id').last()
@@ -101,15 +112,18 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.limit_downloads_to.count(), Role.objects.count())
 
         # remove limits from type
-        response = self.client.post(form_link, data={
-            'name': 'Test type edited',
-            'extensions': '.test.extension',
-            'mimetypes': 'test/edited-mime',
-            'size_limit': 512,
-            'status': AttachmentType.DISABLED,
-            'limit_uploads_to': [],
-            'limit_downloads_to': [],
-        })
+        response = self.client.post(
+            form_link,
+            data={
+                'name': 'Test type edited',
+                'extensions': '.test.extension',
+                'mimetypes': 'test/edited-mime',
+                'size_limit': 512,
+                'status': AttachmentType.DISABLED,
+                'limit_uploads_to': [],
+                'limit_downloads_to': [],
+            }
+        )
         self.assertEqual(response.status_code, 302)
 
         self.assertEqual(test_type.limit_uploads_to.count(), 0)
@@ -129,12 +143,15 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         )
 
         for raw, final in TEST_CASES:
-            response = self.client.post(reverse('misago:admin:system:attachment-types:new'), data={
-                'name': 'Test type',
-                'extensions': raw,
-                'size_limit': 0,
-                'status': AttachmentType.ENABLED,
-            })
+            response = self.client.post(
+                reverse('misago:admin:system:attachment-types:new'),
+                data={
+                    'name': 'Test type',
+                    'extensions': raw,
+                    'size_limit': 0,
+                    'status': AttachmentType.ENABLED,
+                }
+            )
             self.assertEqual(response.status_code, 302)
 
             test_type = AttachmentType.objects.order_by('id').last()
@@ -142,17 +159,22 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
     def test_delete_view(self):
         """delete attachment type view has no showstoppers"""
-        self.client.post(reverse('misago:admin:system:attachment-types:new'), data={
-            'name': 'Test type',
-            'extensions': '.test',
-            'size_limit': 0,
-            'status': AttachmentType.ENABLED,
-        })
+        self.client.post(
+            reverse('misago:admin:system:attachment-types:new'),
+            data={
+                'name': 'Test type',
+                'extensions': '.test',
+                'size_limit': 0,
+                'status': AttachmentType.ENABLED,
+            }
+        )
 
         test_type = AttachmentType.objects.order_by('id').last()
         self.assertEqual(test_type.name, 'Test type')
 
-        action_link = reverse('misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk})
+        action_link = reverse(
+            'misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk}
+        )
 
         response = self.client.post(action_link)
         self.assertEqual(response.status_code, 302)
@@ -166,12 +188,15 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
     def test_cant_delete_type_with_attachments_view(self):
         """delete attachment type is not allowed if it has attachments associated"""
-        self.client.post(reverse('misago:admin:system:attachment-types:new'), data={
-            'name': 'Test type',
-            'extensions': '.test',
-            'size_limit': 0,
-            'status': AttachmentType.ENABLED,
-        })
+        self.client.post(
+            reverse('misago:admin:system:attachment-types:new'),
+            data={
+                'name': 'Test type',
+                'extensions': '.test',
+                'size_limit': 0,
+                'status': AttachmentType.ENABLED,
+            }
+        )
 
         test_type = AttachmentType.objects.order_by('id').last()
         self.assertEqual(test_type.name, 'Test type')
@@ -186,7 +211,9 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
             file='sad76asd678as687sa.zip'
         )
 
-        action_link = reverse('misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk})
+        action_link = reverse(
+            'misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk}
+        )
 
         response = self.client.post(action_link)
         self.assertEqual(response.status_code, 302)

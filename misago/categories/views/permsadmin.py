@@ -21,7 +21,7 @@ class CategoryRoleAdmin(generic.AdminBaseMixin):
 
 
 class CategoryRolesList(CategoryRoleAdmin, generic.ListView):
-    ordering = (('name', None),)
+    ordering = (('name', None), )
 
 
 class RoleFormMixin(object):
@@ -47,8 +47,7 @@ class RoleFormMixin(object):
                 form.instance.permissions = new_permissions
                 form.instance.save()
 
-                messages.success(
-                    request, self.message_submit % {'name': target.name})
+                messages.success(request, self.message_submit % {'name': target.name})
 
                 if 'stay' in request.POST:
                     return redirect(request.path)
@@ -57,13 +56,11 @@ class RoleFormMixin(object):
             elif form.is_valid() and len(perms_forms) != valid_forms:
                 form.add_error(None, _("Form contains errors."))
 
-        return self.render(
-            request,
-            {
-                'form': form,
-                'target': target,
-                'perms_forms': perms_forms,
-            })
+        return self.render(request, {
+            'form': form,
+            'target': target,
+            'perms_forms': perms_forms,
+        })
 
 
 class NewCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
@@ -77,8 +74,7 @@ class EditCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
 class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%(name)s" is special '
-                        'role and can\'t be deleted.')
+            message = _('Role "%(name)s" is special ' 'role and can\'t be deleted.')
             return message % {'name': target.name}
 
     def button_action(self, request, target):
@@ -91,6 +87,8 @@ class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
 Create category roles view for assinging roles to category,
 add link to it in categories list
 """
+
+
 class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/categoryroles'
     template = 'categoryroles.html'
@@ -106,7 +104,8 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
         forms_are_valid = True
         for role in Role.objects.order_by('name'):
             FormType = CategoryRolesACLFormFactory(
-                role, category_roles, assigned_roles.get(role.pk))
+                role, category_roles, assigned_roles.get(role.pk)
+            )
 
             if request.method == 'POST':
                 forms.append(FormType(request.POST, prefix=role.pk))
@@ -125,7 +124,8 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
                             role=form.role,
                             category=target,
                             category_role=form.cleaned_data['category_role']
-                        ))
+                        )
+                    )
             if new_permissions:
                 RoleCategoryACL.objects.bulk_create(new_permissions)
 
@@ -143,18 +143,19 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
             'target': target,
         })
 
+
 CategoriesList.add_item_action(
     name=_("Category permissions"),
     icon='fa fa-adjust',
     link='misago:admin:categories:nodes:permissions',
     style='success'
 )
-
-
 """
 Create role categories view for assinging categories to role,
 add link to it in user roles list
 """
+
+
 class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
     templates_dir = 'misago/admin/categoryroles'
     template = 'rolecategories.html'
@@ -175,9 +176,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
         forms_are_valid = True
         for category in categories:
             category.level_range = range(category.level - 1)
-            FormType = RoleCategoryACLFormFactory(category,
-                                               roles,
-                                               choices.get(category.pk))
+            FormType = RoleCategoryACLFormFactory(category, roles, choices.get(category.pk))
 
             if request.method == 'POST':
                 forms.append(FormType(request.POST, prefix=category.pk))
@@ -192,16 +191,18 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
             for form in forms:
                 if form.cleaned_data['role']:
                     new_permissions.append(
-                        RoleCategoryACL(role=target,
-                                     category=form.category,
-                                     category_role=form.cleaned_data['role']))
+                        RoleCategoryACL(
+                            role=target,
+                            category=form.category,
+                            category_role=form.cleaned_data['role']
+                        )
+                    )
             if new_permissions:
                 RoleCategoryACL.objects.bulk_create(new_permissions)
 
             acl_version.invalidate()
 
-            message = _("Category permissions for role "
-                        "%(name)s have been changed.")
+            message = _("Category permissions for role " "%(name)s have been changed.")
             messages.success(request, message % {'name': target.name})
             if 'stay' in request.POST:
                 return redirect(request.path)
@@ -212,6 +213,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
             'forms': forms,
             'target': target,
         })
+
 
 RolesList.add_item_action(
     name=_("Categories permissions"),

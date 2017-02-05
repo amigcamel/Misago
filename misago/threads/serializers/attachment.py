@@ -6,7 +6,6 @@ from misago.core.utils import format_plaintext_for_html
 
 from ..models import Attachment
 
-
 __all__ = ['AttachmentSerializer']
 
 
@@ -31,10 +30,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
             'uploader_ip',
             'filename',
             'size',
-
             'acl',
             'is_image',
-
             'url',
         )
 
@@ -65,9 +62,11 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     def get_uploader_url(self, obj):
         if obj.uploader_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.uploader_slug,
-                'pk': obj.uploader_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.uploader_slug,
+                    'pk': obj.uploader_id,
+                }
+            )
         else:
             return None

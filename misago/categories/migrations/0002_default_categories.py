@@ -45,10 +45,6 @@ def create_default_categories_tree(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_categories', '0001_initial'),
-    ]
+    dependencies = [('misago_categories', '0001_initial'), ]
 
-    operations = [
-        migrations.RunPython(create_default_categories_tree),
-    ]
+    operations = [migrations.RunPython(create_default_categories_tree), ]

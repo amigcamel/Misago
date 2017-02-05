@@ -6,10 +6,7 @@ from misago.categories.models import Category
 
 from ..models import Post, Thread, ThreadParticipant
 from ..participants import (
-    has_participants,
-    make_participants_aware,
-    set_owner,
-    set_users_unread_private_threads_sync
+    has_participants, make_participants_aware, set_owner, set_users_unread_private_threads_sync
 )
 
 
@@ -169,9 +166,7 @@ class ParticipantsTests(TestCase):
         flag on users and participants provided to true
         """
         User = get_user_model()
-        users = [
-            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
-        ]
+        users = [User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"), ]
 
         participants = [ThreadParticipant(user=u) for u in users]
 

@@ -9,7 +9,6 @@ from misago.core.viewmodel import ViewModel as BaseViewModel
 
 from ..permissions import allow_use_private_threads
 
-
 __all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
 
 
@@ -42,23 +41,18 @@ class ViewModel(BaseViewModel):
         return categories[0]
 
     def get_frontend_context(self):
-        return {
-            'CATEGORIES': BasicCategorySerializer(self._categories, many=True).data
-        }
+        return {'CATEGORIES': BasicCategorySerializer(self._categories, many=True).data}
 
     def get_template_context(self):
-        return {
-            'category': self._model,
-            'subcategories': self._children
-        }
+        return {'category': self._model, 'subcategories': self._children}
 
 
 class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
-            Category.objects.all_categories().filter(
-                id__in=request.user.acl['browseable_categories']
-            ).select_related('parent'))
+            Category.objects.all_categories()
+            .filter(id__in=request.user.acl['browseable_categories']).select_related('parent')
+        )
 
 
 class ThreadsCategory(ThreadsRootCategory):

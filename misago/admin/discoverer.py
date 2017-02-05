@@ -5,7 +5,6 @@ from django.apps import apps
 from .hierarchy import site
 from .urlpatterns import urlpatterns
 
-
 __ALL__ = ['discover_misago_admin']
 
 

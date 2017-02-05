@@ -9,9 +9,17 @@ from .checksums import update_post_checksum
 from .models import Poll, Post, Thread
 
 
-def post_thread(category, title='Test thread', poster='Tester',
-                is_global=False, is_pinned=False, is_unapproved=False,
-                is_hidden=False, is_closed=False, started_on=None):
+def post_thread(
+        category,
+        title='Test thread',
+        poster='Tester',
+        is_global=False,
+        is_pinned=False,
+        is_unapproved=False,
+        is_hidden=False,
+        is_closed=False,
+        started_on=None
+):
     started_on = started_on or timezone.now()
 
     kwargs = {
@@ -38,7 +46,7 @@ def post_thread(category, title='Test thread', poster='Tester',
             'last_poster': poster,
             'last_poster_name': poster.username,
             'last_poster_slug': poster.slug,
-            })
+        })
     except AttributeError:
         kwargs.update({
             'starter_name': poster,
@@ -59,9 +67,18 @@ def post_thread(category, title='Test thread', poster='Tester',
     return thread
 
 
-def reply_thread(thread, poster="Tester", message="I am test message",
-                 is_unapproved=False, is_hidden=False, is_event=False,
-                 has_reports=False, has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
+def reply_thread(
+        thread,
+        poster="Tester",
+        message="I am test message",
+        is_unapproved=False,
+        is_hidden=False,
+        is_event=False,
+        has_reports=False,
+        has_open_reports=False,
+        posted_on=None,
+        poster_ip='127.0.0.1'
+):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
     kwargs = {
@@ -107,28 +124,23 @@ def post_poll(thread, poster):
         poster_slug=poster.slug,
         poster_ip='127.0.0.1',
         question="Lorem ipsum dolor met?",
-        choices=[
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 1
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 0
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 2
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 1
-            }
-        ],
+        choices=[{
+            'hash': 'aaaaaaaaaaaa',
+            'label': 'Alpha',
+            'votes': 1
+        }, {
+            'hash': 'bbbbbbbbbbbb',
+            'label': 'Beta',
+            'votes': 0
+        }, {
+            'hash': 'gggggggggggg',
+            'label': 'Gamma',
+            'votes': 2
+        }, {
+            'hash': 'dddddddddddd',
+            'label': 'Delta',
+            'votes': 1
+        }],
         allowed_choices=2,
         votes=4
     )
@@ -197,12 +209,7 @@ def like_post(post, liker=None, username=None):
             liker_ip='127.0.0.1'
         )
 
-        post.last_likes = [
-            {
-                'id': liker.id,
-                'username': liker.username
-            }
-        ] + post.last_likes
+        post.last_likes = [{'id': liker.id, 'username': liker.username}] + post.last_likes
     else:
         like = post.postlike_set.create(
             category=post.category,
@@ -212,12 +219,7 @@ def like_post(post, liker=None, username=None):
             liker_ip='127.0.0.1'
         )
 
-        post.last_likes = [
-            {
-                'id': None,
-                'username': username
-            }
-        ] + post.last_likes
+        post.last_likes = [{'id': None, 'username': username}] + post.last_likes
 
     post.likes += 1
     post.save()

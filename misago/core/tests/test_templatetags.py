@@ -173,10 +173,7 @@ class ShorthandsTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'result': 'Ok!',
-            'value': True
-        })).strip(), 'Ok!')
+        self.assertEqual(tpl.render(Context({'result': 'Ok!', 'value': True})).strip(), 'Ok!')
 
     def test_iftrue_for_false(self):
         """iftrue isnt rendering value for false"""
@@ -187,10 +184,7 @@ class ShorthandsTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'result': 'Ok!',
-            'value': False
-        })).strip(), '')
+        self.assertEqual(tpl.render(Context({'result': 'Ok!', 'value': False})).strip(), '')
 
     def test_iffalse_for_true(self):
         """iffalse isnt rendering value for true"""
@@ -201,10 +195,7 @@ class ShorthandsTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'result': 'Ok!',
-            'value': True
-        })).strip(), '')
+        self.assertEqual(tpl.render(Context({'result': 'Ok!', 'value': True})).strip(), '')
 
     def test_iffalse_for_false(self):
         """iffalse renders value for false"""
@@ -215,10 +206,7 @@ class ShorthandsTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'result': 'Ok!',
-            'value': False
-        })).strip(), 'Ok!')
+        self.assertEqual(tpl.render(Context({'result': 'Ok!', 'value': False})).strip(), 'Ok!')
 
 
 class JSONTests(TestCase):
@@ -231,9 +219,13 @@ class JSONTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'value': {'he</script>llo': 'bo"b!'}
-        })).strip(), r'{"he\u003C/script>llo": "bo\"b!"}')
+        self.assertEqual(
+            tpl.render(Context({
+                'value': {
+                    'he</script>llo': 'bo"b!'
+                }
+            })).strip(), r'{"he\u003C/script>llo": "bo\"b!"}'
+        )
 
 
 class PageTitleTests(TestCase):
@@ -246,9 +238,7 @@ class PageTitleTests(TestCase):
         """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'item': 'Lorem Ipsum'
-        })).strip(), 'Lorem Ipsum')
+        self.assertEqual(tpl.render(Context({'item': 'Lorem Ipsum'})).strip(), 'Lorem Ipsum')
 
     def test_parent_title(self):
         """tag builds full title from title and parent name"""
@@ -259,10 +249,12 @@ class PageTitleTests(TestCase):
         """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'item': 'Lorem Ipsum',
-            'parent': 'Some Thread'
-        })).strip(), 'Lorem Ipsum | Some Thread')
+        self.assertEqual(
+            tpl.render(Context({
+                'item': 'Lorem Ipsum',
+                'parent': 'Some Thread'
+            })).strip(), 'Lorem Ipsum | Some Thread'
+        )
 
     def test_paged_title(self):
         """tag builds full title from title and page number"""
@@ -273,9 +265,11 @@ class PageTitleTests(TestCase):
         """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'item': 'Lorem Ipsum'
-        })).strip(), 'Lorem Ipsum (page: 3)')
+        self.assertEqual(
+            tpl.render(Context({
+                'item': 'Lorem Ipsum'
+            })).strip(), 'Lorem Ipsum (page: 3)'
+        )
 
     def test_kitchensink_title(self):
         """tag builds full title from all options"""
@@ -286,7 +280,9 @@ class PageTitleTests(TestCase):
         """
 
         tpl = Template(tpl_content)
-        self.assertEqual(tpl.render(Context({
-            'item': 'Lorem Ipsum',
-            'parent': 'Some Thread'
-        })).strip(), 'Lorem Ipsum (page: 3) | Some Thread')
+        self.assertEqual(
+            tpl.render(Context({
+                'item': 'Lorem Ipsum',
+                'parent': 'Some Thread'
+            })).strip(), 'Lorem Ipsum (page: 3) | Some Thread'
+        )

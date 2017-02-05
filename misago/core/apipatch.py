@@ -4,7 +4,6 @@ from django.http import Http404
 
 from rest_framework.response import Response
 
-
 ALLOWED_OPS = ('add', 'remove', 'replace')
 
 
@@ -39,9 +38,7 @@ class ApiPatch(object):
 
     def dispatch(self, request, target):
         if not isinstance(request.data, list):
-            return Response({
-                'detail': "PATCH request should be list of operations"
-            }, status=400)
+            return Response({'detail': "PATCH request should be list of operations"}, status=400)
 
         detail = []
         is_errored = False

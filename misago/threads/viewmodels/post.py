@@ -5,7 +5,6 @@ from misago.core.viewmodel import ViewModel as BaseViewModel
 
 from ..permissions.threads import exclude_invisible_posts
 
-
 __all__ = ['ThreadPost']
 
 
@@ -27,11 +26,7 @@ class ViewModel(BaseViewModel):
         if select_for_update:
             queryset = queryset.select_for_update()
         else:
-            queryset = queryset.select_related(
-                'poster',
-                'poster__rank',
-                'poster__ban_cache'
-            )
+            queryset = queryset.select_related('poster', 'poster__rank', 'poster__ban_cache')
 
         post = get_object_or_404(queryset, pk=pk)
 
@@ -41,8 +36,7 @@ class ViewModel(BaseViewModel):
         return post
 
     def get_queryset(self, request, thread):
-        return exclude_invisible_posts(
-            request.user, thread.category, thread.post_set)
+        return exclude_invisible_posts(request.user, thread.category, thread.post_set)
 
 
 class ThreadPost(ViewModel):

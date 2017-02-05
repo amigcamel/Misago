@@ -92,5 +92,4 @@ class ThreadParticipantTests(TestCase):
         self.assertEqual(self.thread.participants.count(), 1)
 
         with self.assertRaises(ThreadParticipant.DoesNotExist):
-            participant = ThreadParticipant.objects.get(
-                thread=self.thread, user=user)
+            participant = ThreadParticipant.objects.get(thread=self.thread, user=user)

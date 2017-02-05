@@ -6,26 +6,21 @@ from django.utils.translation import ugettext_lazy as _
 from misago.conf import settings
 from misago.core.utils import slugify
 
-
 __all__ = [
     'THREAD_WEIGHT_DEFAULT',
     'THREAD_WEIGHT_PINNED',
     'THREAD_WEIGHT_GLOBAL',
     'THREAD_WEIGHT_CHOICES',
-
     'Thread',
 ]
-
 
 THREAD_WEIGHT_DEFAULT = 0
 THREAD_WEIGHT_PINNED = 1
 THREAD_WEIGHT_GLOBAL = 2
 
-THREAD_WEIGHT_CHOICES = (
-    (THREAD_WEIGHT_DEFAULT, _("Don't pin thread")),
-    (THREAD_WEIGHT_PINNED, _("Pin thread within category")),
-    (THREAD_WEIGHT_GLOBAL, _("Pin thread globally"))
-)
+THREAD_WEIGHT_CHOICES = ((THREAD_WEIGHT_DEFAULT, _("Don't pin thread")),
+                         (THREAD_WEIGHT_PINNED, _("Pin thread within category")),
+                         (THREAD_WEIGHT_GLOBAL, _("Pin thread globally")))
 
 
 @python_2_unicode_compatible
@@ -46,27 +41,16 @@ class Thread(models.Model):
     last_post_on = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
     )
     starter = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
     )
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
     )
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
@@ -130,10 +114,7 @@ class Thread(models.Model):
         except ObjectDoesNotExist:
             self.has_poll = False
 
-        self.replies = self.post_set.filter(
-            is_event=False,
-            is_unapproved=False
-        ).count()
+        self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
 
         if self.replies > 0:
             self.replies -= 1

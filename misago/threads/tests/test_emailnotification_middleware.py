@@ -23,17 +23,13 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(
-            category=self.category,
-            started_on=timezone.now() - timedelta(seconds=5)
+            category=self.category, started_on=timezone.now() - timedelta(seconds=5)
         )
         self.override_acl()
 
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={
-            'thread_pk': self.thread.pk
-        })
+        self.api_link = reverse('misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk})
 
-        self.other_user = get_user_model().objects.create_user(
-            'Bob', 'bob@boberson.com', 'pass123')
+        self.other_user = get_user_model().objects.create_user('Bob', 'bob@boberson.com', 'pass123')
 
     def override_acl(self):
         new_acl = deepcopy(self.user.acl)
@@ -58,17 +54,13 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         })
 
         if hide:
-            new_acl['categories'][self.category.pk].update({
-                'can_browse': False
-            })
+            new_acl['categories'][self.category.pk].update({'can_browse': False})
 
         override_acl(self.other_user, new_acl)
 
     def test_no_subscriptions(self):
         """no emails are sent because noone subscibes to thread"""
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -82,9 +74,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True
         )
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -98,9 +88,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=False
         )
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -115,9 +103,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
         self.override_other_user_acl(hide=True)
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -134,9 +120,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
 
         testutils.reply_thread(self.thread, posted_on=timezone.now())
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -151,9 +135,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
         self.override_other_user_acl()
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
@@ -181,9 +163,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
         self.override_other_user_acl()
 
-        response = self.client.post(self.api_link, data={
-            'post': 'This is test response!'
-        })
+        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)

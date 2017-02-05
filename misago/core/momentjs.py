@@ -1,6 +1,5 @@
 from misago.conf import settings
 
-
 MOMENT_STATIC_PATH = 'misago/momentjs/{}.js'
 
 
@@ -27,4 +26,3 @@ def clean_language_name(language):
 
     # nothing was found
     return None
-

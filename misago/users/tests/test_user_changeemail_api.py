@@ -8,6 +8,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     """
     tests for user change email RPC (/api/users/1/change-email/)
     """
+
     def setUp(self):
         super(UserChangeEmailTests, self).setUp()
         self.link = '/api/users/%s/change-email/' % self.user.pk
@@ -19,10 +20,10 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""
-        response = self.client.post(self.link, data={
-            'new_email': 'new@email.com',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_email': 'new@email.com',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
@@ -35,24 +36,24 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
-        response = self.client.post(self.link, data={
-            'new_email': 'new@email.com',
-            'password': 'Lor3mIpsum'
-        })
+        response = self.client.post(
+            self.link, data={'new_email': 'new@email.com',
+                             'password': 'Lor3mIpsum'}
+        )
         self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
-        response = self.client.post(self.link, data={
-            'new_email': '',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_email': '',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertContains(response, 'new_email":["This field is required', status_code=400)
 
-        response = self.client.post(self.link, data={
-            'new_email': 'newmail',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_email': 'newmail',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertContains(response, 'valid email address', status_code=400)
 
     def test_email_taken(self):
@@ -60,8 +61,8 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         User = get_user_model()
         User.objects.create_user('BobBoberson', 'new@email.com', 'Pass.123')
 
-        response = self.client.post(self.link, data={
-            'new_email': 'new@email.com',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link, data={'new_email': 'new@email.com',
+                             'password': self.USER_PASSWORD}
+        )
         self.assertContains(response, 'not available', status_code=400)

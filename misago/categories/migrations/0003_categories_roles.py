@@ -14,7 +14,7 @@ def create_default_categories_roles(apps, schema_editor):
     see_only = CategoryRole.objects.create(
         name=_('See only'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 0
@@ -25,13 +25,13 @@ def create_default_categories_roles(apps, schema_editor):
     read_only = CategoryRole.objects.create(
         name=_('Read only'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 1
             },
 
-            # threads perms
+    # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_see_posts_likes': 1,
@@ -44,13 +44,13 @@ def create_default_categories_roles(apps, schema_editor):
     reply_only = CategoryRole.objects.create(
         name=_('Reply to threads'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 1
             },
 
-            # threads perms
+    # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_reply_threads': 1,
@@ -66,13 +66,13 @@ def create_default_categories_roles(apps, schema_editor):
     standard = CategoryRole.objects.create(
         name=_('Start and reply threads'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 1
             },
 
-            # threads perms
+    # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
@@ -90,13 +90,13 @@ def create_default_categories_roles(apps, schema_editor):
     standard_with_polls = CategoryRole.objects.create(
         name=_('Start and reply threads, make polls'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 1,
             },
 
-            # threads perms
+    # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
@@ -114,13 +114,13 @@ def create_default_categories_roles(apps, schema_editor):
     moderator = CategoryRole.objects.create(
         name=_('Moderator'),
         permissions={
-            # categories perms
+    # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 1
             },
 
-            # threads perms
+    # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_start_threads': 1,
@@ -162,9 +162,7 @@ def create_default_categories_roles(apps, schema_editor):
     category = Category.objects.get(tree_id=1, level=1)
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(name=_('Moderator')),
-        category=category,
-        category_role=moderator
+        role=Role.objects.get(name=_('Moderator')), category=category, category_role=moderator
     )
 
     RoleCategoryACL.objects.create(
@@ -174,9 +172,7 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(special_role='anonymous'),
-        category=category,
-        category_role=read_only
+        role=Role.objects.get(special_role='anonymous'), category=category, category_role=read_only
     )
 
 
@@ -187,6 +183,4 @@ class Migration(migrations.Migration):
         ('misago_acl', '0003_default_roles'),
     ]
 
-    operations = [
-        migrations.RunPython(create_default_categories_roles),
-    ]
+    operations = [migrations.RunPython(create_default_categories_roles), ]

@@ -6,7 +6,6 @@ from misago.threads.models import Attachment
 
 from .. import fetch_assoc, movedids
 
-
 ATTACHMENT_RE = re.compile(r'/attachment/(?P<hash>[a-z0-9]+)/')
 ATTACHMENT_THUMB_RE = re.compile(r'/attachment/thumb/(?P<hash>[a-z0-9]+)/')
 

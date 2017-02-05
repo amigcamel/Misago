@@ -5,7 +5,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from misago.acl import version as acl_version
 from misago.core.utils import slugify
 
-
 __all__ = ['Rank']
 
 

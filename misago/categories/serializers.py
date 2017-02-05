@@ -6,7 +6,6 @@ from misago.core.utils import format_plaintext_for_html
 
 from .models import Category
 
-
 __all__ = [
     'BasicCategorySerializer',
     'IndexCategorySerializer',
@@ -16,19 +15,17 @@ __all__ = [
 
 def last_activity_detail(f):
     """util for serializing last activity details"""
+
     def decorator(self, obj):
         if not obj.last_thread_id:
             return None
 
         acl = self.get_acl(obj)
-        if not all((
-                    acl.get('can_see'),
-                    acl.get('can_browse'),
-                    acl.get('can_see_all_threads')
-                )):
+        if not all((acl.get('can_see'), acl.get('can_browse'), acl.get('can_see_all_threads'))):
             return None
 
         return f(self, obj)
+
     return decorator
 
 
@@ -106,10 +103,12 @@ class CategorySerializer(serializers.ModelSerializer):
     @last_activity_detail
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.last_poster_slug,
-                'pk': obj.last_poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.last_poster_slug,
+                    'pk': obj.last_poster_id,
+                }
+            )
         else:
             return None
 
@@ -120,9 +119,7 @@ class CategorySerializer(serializers.ModelSerializer):
             return {}
 
     def get_api_url(self, obj):
-        return {
-            'read': obj.get_read_api_url(),
-        }
+        return {'read': obj.get_read_api_url(), }
 
 
 class BasicCategorySerializer(CategorySerializer):

@@ -5,7 +5,6 @@ from misago.threads.models import Thread, Poll, PollVote
 
 from . import fetch_assoc, movedids, localise_datetime
 
-
 UserModel = get_user_model()
 
 

@@ -7,7 +7,6 @@ from misago.acl import serialize_acl
 
 from . import RankSerializer
 
-
 __all__ = [
     'AuthenticatedUserSerializer',
     'AnonymousUserSerializer',
@@ -40,28 +39,11 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            'id',
-            'username',
-            'slug',
-            'email',
-            'joined_on',
-            'is_hiding_presence',
-            'title',
-            'full_title',
-            'short_title',
-            'rank',
-            'avatars',
-            'limits_private_thread_invites_to',
-            'unread_private_threads',
-            'subscribe_to_started_threads',
-            'subscribe_to_replied_threads',
-            'threads',
-            'posts',
-            'followers',
-            'following',
-            'acl',
-            'absolute_url',
-            'api_url'
+            'id', 'username', 'slug', 'email', 'joined_on', 'is_hiding_presence', 'title',
+            'full_title', 'short_title', 'rank', 'avatars', 'limits_private_thread_invites_to',
+            'unread_private_threads', 'subscribe_to_started_threads',
+            'subscribe_to_replied_threads', 'threads', 'posts', 'followers', 'following', 'acl',
+            'absolute_url', 'api_url'
         )
 
     def get_acl(self, obj):
@@ -72,16 +54,11 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
 
     def get_api_url(self, obj):
         return {
-            'avatar': reverse(
-                'misago:api:user-avatar', kwargs={'pk': obj.pk}),
-            'options': reverse(
-                'misago:api:user-forum-options', kwargs={'pk': obj.pk}),
-            'username': reverse(
-                'misago:api:user-username', kwargs={'pk': obj.pk}),
-            'change_email': reverse(
-                'misago:api:user-change-email', kwargs={'pk': obj.pk}),
-            'change_password': reverse(
-                'misago:api:user-change-password', kwargs={'pk': obj.pk}),
+            'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
+            'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),
+            'username': reverse('misago:api:user-username', kwargs={'pk': obj.pk}),
+            'change_email': reverse('misago:api:user-change-email', kwargs={'pk': obj.pk}),
+            'change_password': reverse('misago:api:user-change-password', kwargs={'pk': obj.pk}),
         }
 
 
@@ -218,8 +195,7 @@ class UserProfileSerializer(UserSerializer):
         )
 
     def get_email(self, obj):
-        if (obj == self.context['user'] or
-                self.context['user'].acl['can_see_users_emails']):
+        if (obj == self.context['user'] or self.context['user'].acl['can_see_users_emails']):
             return obj.email
         else:
             return None
@@ -244,10 +220,9 @@ class UserProfileSerializer(UserSerializer):
             'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
             'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
             'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
-            'moderate_avatar': reverse(
-                'misago:api:user-moderate-avatar',kwargs={'pk': obj.pk}),
-            'moderate_username': reverse(
-                'misago:api:user-moderate-username',kwargs={'pk': obj.pk}),
+            'moderate_avatar': reverse('misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
+            'moderate_username':
+            reverse('misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
             'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
             'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
             'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),

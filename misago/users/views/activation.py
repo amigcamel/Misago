@@ -18,14 +18,13 @@ def activation_view(f):
     @deny_banned_ips
     def decorator(*args, **kwargs):
         return f(*args, **kwargs)
+
     return decorator
 
 
 @activation_view
 def request_activation(request):
-    request.frontend_context.update({
-        'SEND_ACTIVATION_API': reverse('misago:api:send-activation')
-    })
+    request.frontend_context.update({'SEND_ACTIVATION_API': reverse('misago:api:send-activation')})
     return render(request, 'misago/activation/request.html')
 
 
@@ -49,8 +48,10 @@ def activate_by_token(request, pk, token):
             raise ActivationStopped(message)
 
         if not is_activation_token_valid(inactive_user, token):
-            message = _("%(user)s, your activation link is invalid. "
-                        "Try again or request new activation link.")
+            message = _(
+                "%(user)s, your activation link is invalid. "
+                "Try again or request new activation link."
+            )
             message = message % {'user': inactive_user.username}
             raise ActivationError(message)
 
@@ -58,19 +59,19 @@ def activate_by_token(request, pk, token):
         if ban:
             raise Banned(ban)
     except ActivationStopped as e:
-        return render(request, 'misago/activation/stopped.html', {
-                'message': e.args[0],
-            })
+        return render(request, 'misago/activation/stopped.html', {'message': e.args[0], })
     except ActivationError as e:
-        return render(request, 'misago/activation/error.html', {
-                'message': e.args[0],
-            }, status=400)
+        return render(request, 'misago/activation/error.html', {'message': e.args[0], }, status=400)
 
     inactive_user.requires_activation = ACTIVATION_REQUIRED_NONE
     inactive_user.save(update_fields=['requires_activation'])
 
     message = _("%(user)s, your account has been activated!")
 
-    return render(request, 'misago/activation/done.html', {
-            'message': message % {'user': inactive_user.username},
-        })
+    return render(
+        request, 'misago/activation/done.html', {
+            'message': message % {
+                'user': inactive_user.username
+            },
+        }
+    )

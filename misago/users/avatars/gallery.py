@@ -9,7 +9,6 @@ from misago.conf import settings
 
 from . import store
 
-
 DEFAULT_GALLERY = '__default__'
 
 
@@ -30,10 +29,7 @@ def get_available_galleries(include_default=False):
             continue
 
         if image.gallery not in galleries_dicts:
-            galleries_dicts[image.gallery] = {
-                'name': image.gallery,
-                'images': []
-            }
+            galleries_dicts[image.gallery] = {'name': image.gallery, 'images': []}
 
             galleries.append(galleries_dicts[image.gallery])
 
@@ -61,10 +57,10 @@ def load_avatar_galleries():
 
         for image in images:
             with open(image, 'rb') as image_file:
-                galleries.append(AvatarGallery.objects.create(
-                    gallery=gallery_name,
-                    image=ContentFile(image_file.read(), 'image')
-                ))
+                galleries.append(
+                    AvatarGallery.objects.
+                    create(gallery=gallery_name, image=ContentFile(image_file.read(), 'image'))
+                )
     return galleries
 
 

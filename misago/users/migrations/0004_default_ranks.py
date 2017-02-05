@@ -20,10 +20,7 @@ def create_default_ranks(apps, schema_editor):
     )
 
     member = Rank.objects.create(
-        name=_("Members"),
-        slug=slugify(_("Members")),
-        is_default=True,
-        order=1
+        name=_("Members"), slug=slugify(_("Members")), is_default=True, order=1
     )
 
     Role = apps.get_model('misago_acl', 'Role')
@@ -43,6 +40,4 @@ class Migration(migrations.Migration):
         ('misago_acl', '0003_default_roles'),
     ]
 
-    operations = [
-        migrations.RunPython(create_default_ranks),
-    ]
+    operations = [migrations.RunPython(create_default_ranks), ]

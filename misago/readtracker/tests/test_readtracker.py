@@ -22,10 +22,7 @@ class ReadTrackerTests(TestCase):
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
-        return testutils.post_thread(
-            category=self.category,
-            started_on=datetime
-        )
+        return testutils.post_thread(category=self.category, started_on=datetime)
 
 
 class CategoriesTrackerTests(ReadTrackerTests):

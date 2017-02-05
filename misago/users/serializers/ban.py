@@ -6,7 +6,6 @@ from misago.core.utils import format_plaintext_for_html
 
 from ..models import BAN_IP, Ban
 
-
 __all__ = [
     'BanMessageSerializer',
     'BanDetailsSerializer',
@@ -15,10 +14,7 @@ __all__ = [
 
 def serialize_message(message):
     if message:
-        return {
-            'plain': message,
-            'html': format_plaintext_for_html(message)
-        }
+        return {'plain': message, 'html': format_plaintext_for_html(message)}
     else:
         return None
 

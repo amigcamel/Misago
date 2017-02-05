@@ -3,7 +3,6 @@ from django.test import TestCase
 
 from ..authbackends import MisagoBackend
 
-
 backend = MisagoBackend()
 
 
@@ -12,42 +11,29 @@ class MisagoBackendTests(TestCase):
         UserModel = get_user_model()
 
         self.password = 'Pass.123'
-        self.user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@test.com', self.password)
+        self.user = UserModel.objects.create_user('BobBoberson', 'bob@test.com', self.password)
 
     def test_authenticate_username(self):
         """auth authenticates with username"""
-        user = backend.authenticate(
-            username=self.user.username,
-            password=self.password
-        )
+        user = backend.authenticate(username=self.user.username, password=self.password)
 
         self.assertEqual(user, self.user)
 
     def test_authenticate_email(self):
         """auth authenticates with email instead of username"""
-        user = backend.authenticate(
-            username=self.user.email,
-            password=self.password
-        )
+        user = backend.authenticate(username=self.user.email, password=self.password)
 
         self.assertEqual(user, self.user)
 
     def test_authenticate_invalid_credential(self):
         """auth handles invalid credentials"""
-        user = backend.authenticate(
-            username='InvalidCredential',
-            password=self.password
-        )
+        user = backend.authenticate(username='InvalidCredential', password=self.password)
 
         self.assertIsNone(user)
 
     def test_authenticate_invalid_password(self):
         """auth validates password"""
-        user = backend.authenticate(
-            username=self.user.email,
-            password='Invalid'
-        )
+        user = backend.authenticate(username=self.user.email, password='Invalid')
 
         self.assertIsNone(user)
 
@@ -56,10 +42,7 @@ class MisagoBackendTests(TestCase):
         self.user.is_active = False
         self.user.save()
 
-        user = backend.authenticate(
-            username=self.user.email,
-            password=self.password
-        )
+        user = backend.authenticate(username=self.user.email, password=self.password)
 
         self.assertIsNone(user)
 

@@ -22,10 +22,8 @@ from django.views.generic import TemplateView
 from misago.core.views import javascript_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
 
-
 admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
-
 
 urlpatterns = [
     url(r'^', include('misago.urls', namespace='misago')),
@@ -37,19 +35,14 @@ urlpatterns = [
     #url(r'^django-admin/', include(admin.site.urls)),
 ]
 
-
 # If debug mode is enabled, include debug toolbar
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
-
+    urlpatterns += [url(r'^__debug__/', include(debug_toolbar.urls)), ]
 
 # Use static file server for static and media files (debug only)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 
 # Error Handlers
 # Misago needs those handlers to deal with errors raised by it's middlewares

@@ -44,6 +44,7 @@ def profile_view(f):
         add_acl(request.user, profile)
 
         return f(request, *args, **kwargs)
+
     return decorator
 
 
@@ -57,6 +58,7 @@ def profile_view_restricted_visibility(f):
         else:
             # we are trying to display page thats not in nav
             raise Http404()
+
     return decorator
 
 
@@ -93,7 +95,8 @@ def render(request, template, context):
     context['profile'].status = get_user_status(request.user, context['profile'])
 
     request.frontend_context['PROFILE'] = UserProfileSerializer(
-        context['profile'], context={'user': request.user}).data
+        context['profile'], context={'user': request.user}
+    ).data
 
     if not context['profile'].is_active:
         request.frontend_context['PROFILE']['is_active'] = False
@@ -108,9 +111,7 @@ def landing(request, profile):
 
 @profile_view
 def posts(request, profile):
-    context = {
-        'profile': profile,
-    }
+    context = {'profile': profile, }
 
     feed = UserPosts(request, profile)
     context.update(feed.get_template_context())
@@ -122,9 +123,7 @@ def posts(request, profile):
 
 @profile_view
 def threads(request, profile):
-    context = {
-        'profile': profile
-    }
+    context = {'profile': profile}
 
     feed = UserThreads(request, profile)
     context.update(feed.get_template_context())
@@ -142,15 +141,16 @@ def followers(request, profile):
     paginator = pagination_dict(page)
 
     request.frontend_context['PROFILE_FOLLOWERS'] = dict(
-        results=UserSerializer(page.object_list, many=True).data,
-        **paginator
+        results=UserSerializer(page.object_list, many=True).data, **paginator
     )
 
-    return render(request, 'misago/profile/followers.html', {
-        'profile': profile,
-        'followers': page.object_list,
-        'count': paginator['count'],
-    })
+    return render(
+        request, 'misago/profile/followers.html', {
+            'profile': profile,
+            'followers': page.object_list,
+            'count': paginator['count'],
+        }
+    )
 
 
 @profile_view
@@ -161,15 +161,16 @@ def follows(request, profile):
     paginator = pagination_dict(page)
 
     request.frontend_context['PROFILE_FOLLOWS'] = dict(
-        results=UserSerializer(page.object_list, many=True).data,
-        **paginator
+        results=UserSerializer(page.object_list, many=True).data, **paginator
     )
 
-    return render(request, 'misago/profile/follows.html', {
-        'profile': profile,
-        'follows': page.object_list,
-        'count': paginator['count'],
-    })
+    return render(
+        request, 'misago/profile/follows.html', {
+            'profile': profile,
+            'follows': page.object_list,
+            'count': paginator['count'],
+        }
+    )
 
 
 @profile_view_restricted_visibility
@@ -180,17 +181,17 @@ def username_history(request, profile):
     page = paginate(queryset, None, 14, 4)
 
     data = pagination_dict(page)
-    data.update({
-        'results': UsernameChangeSerializer(page.object_list, many=True).data
-    })
+    data.update({'results': UsernameChangeSerializer(page.object_list, many=True).data})
 
     request.frontend_context['PROFILE_NAME_HISTORY'] = data
 
-    return render(request, 'misago/profile/username_history.html', {
-        'profile': profile,
-        'history': page.object_list,
-        'count': data['count'],
-    })
+    return render(
+        request, 'misago/profile/username_history.html', {
+            'profile': profile,
+            'history': page.object_list,
+            'count': data['count'],
+        }
+    )
 
 
 @profile_view_restricted_visibility

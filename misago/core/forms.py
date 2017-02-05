@@ -1,5 +1,4 @@
-from django.forms import (
-    DateTimeField, RadioSelect, TypedChoiceField, ValidationError)
+from django.forms import (DateTimeField, RadioSelect, TypedChoiceField, ValidationError)
 from django.utils.translation import ugettext_lazy as _
 
 from .utils import parse_iso8601_string
@@ -46,6 +45,8 @@ def YesNoSwitch(**kwargs):
 
     return YesNoSwitchBase(
         coerce=int,
-        choices=((1, yes_label), (0, no_label)),
+        choices=((1, yes_label),
+                 (0, no_label)),
         widget=RadioSelect(attrs={'class': 'yesno-switch'}),
-        **kwargs)
+        **kwargs
+    )

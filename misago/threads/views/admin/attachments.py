@@ -34,15 +34,13 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
     )
     selection_label = _('With attachments: 0')
     empty_selection_label = _('Select attachments')
-    mass_actions = [
-        {
-            'action': 'delete',
-            'name': _("Delete attachments"),
-            'icon': 'fa fa-times-circle',
-            'confirmation': _("Are you sure you want to delete selected attachments?"),
-            'is_atomic': False
-        }
-    ]
+    mass_actions = [{
+        'action': 'delete',
+        'name': _("Delete attachments"),
+        'icon': 'fa fa-times-circle',
+        'confirmation': _("Are you sure you want to delete selected attachments?"),
+        'is_atomic': False
+    }]
 
     def get_search_form(self, request):
         return SearchAttachmentsForm
@@ -69,7 +67,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
 
     def delete_from_cache(self, post, attachments):
         if not post.attachments_cache:
-            return # admin action may be taken due to desynced state
+            return    # admin action may be taken due to desynced state
 
         clean_cache = []
         for a in post.attachments_cache:
@@ -90,7 +88,7 @@ class DeleteAttachment(AttachmentAdmin, generic.ButtonView):
 
     def delete_from_cache(self, attachment):
         if not attachment.post.attachments_cache:
-            return # admin action may be taken due to desynced state
+            return    # admin action may be taken due to desynced state
 
         clean_cache = []
         for a in attachment.post.attachments_cache:

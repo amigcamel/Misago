@@ -9,6 +9,7 @@ class PostsPaginator(Paginator):
     Paginator that returns that makes last item on page
     repeat as first item on next page.
     """
+
     @cached_property
     def num_pages(self):
         """

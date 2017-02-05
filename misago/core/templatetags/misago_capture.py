@@ -9,7 +9,6 @@ Syntax:
 
 from django import template
 
-
 register = template.Library()
 SYNTAX_ERROR = 'capture tag syntax is "capture [trimmed] as [value]"'
 
@@ -31,7 +30,7 @@ def capture(parser, token):
     else:
         raise template.TemplateSyntaxError(SYNTAX_ERROR)
 
-    nodelist = parser.parse(('endcapture',))
+    nodelist = parser.parse(('endcapture', ))
     parser.delete_first_token()
     return CaptureNode(variable, nodelist, trim=is_trimmed)
 

@@ -2,7 +2,6 @@ from importlib import import_module
 
 from misago.conf import settings
 
-
 __ALL__ = ['providers']
 
 

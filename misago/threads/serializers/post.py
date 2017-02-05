@@ -8,7 +8,6 @@ from misago.users.serializers import BasicUserSerializer, UserSerializer
 
 from ..models import Post
 
-
 __all__ = [
     'PostSerializer',
     'PostFeedSerializer',
@@ -58,14 +57,12 @@ class PostSerializer(serializers.ModelSerializer):
             'is_event',
             'event_type',
             'event_context',
-
             'acl',
             'is_liked',
             'is_new',
             'is_read',
             'last_likes',
             'likes',
-
             'api',
             'url',
         ]
@@ -152,19 +149,19 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_last_editor_url(self, obj):
         if obj.last_editor_id:
-            return reverse('misago:user', kwargs={
-                'pk': obj.last_editor_id,
-                'slug': obj.last_editor_slug
-            })
+            return reverse(
+                'misago:user', kwargs={'pk': obj.last_editor_id,
+                                       'slug': obj.last_editor_slug}
+            )
         else:
             return None
 
     def get_hidden_by_url(self, obj):
         if obj.hidden_by_id:
-            return reverse('misago:user', kwargs={
-                'pk': obj.hidden_by_id,
-                'slug': obj.hidden_by_slug
-            })
+            return reverse(
+                'misago:user', kwargs={'pk': obj.hidden_by_id,
+                                       'slug': obj.hidden_by_slug}
+            )
         else:
             return None
 
@@ -188,18 +185,10 @@ class PostFeedSerializer(PostSerializer):
 
     class Meta:
         model = Post
-        fields = PostSerializer.Meta.fields + [
-            'category',
-
-            'thread',
-            'top_category'
-        ]
+        fields = PostSerializer.Meta.fields + ['category', 'thread', 'top_category']
 
     def get_thread(self, obj):
-        return {
-            'title': obj.thread.title,
-            'url': obj.thread.get_absolute_url()
-        }
+        return {'title': obj.thread.title, 'url': obj.thread.get_absolute_url()}
 
     def get_top_category(self, obj):
         try:

@@ -32,9 +32,7 @@ def render(request, template, context):
     for rank in Rank.objects.filter(is_tab=True).order_by('order'):
         context['pages'].append({
             'name': rank.name,
-            'reversed_link': reverse('misago:users-rank', kwargs={
-                'slug': rank.slug
-            }),
+            'reversed_link': reverse('misago:users-rank', kwargs={'slug': rank.slug}),
             'is_active': active_rank.pk == rank.pk if active_rank else None
         })
 
@@ -67,6 +65,7 @@ def allow_see_list(f):
     def decorator(request, *args, **kwargs):
         allow_browse_users_list(request.user)
         return f(request, *args, **kwargs)
+
     return decorator
 
 
@@ -87,11 +86,13 @@ def active_posters(request):
     }
 
     template = "misago/userslists/active_posters.html"
-    return render(request, template, {
-        'tracked_period': settings.MISAGO_RANKING_LENGTH,
-        'users': ranking['users'],
-        'users_count': ranking['users_count']
-    })
+    return render(
+        request, template, {
+            'tracked_period': settings.MISAGO_RANKING_LENGTH,
+            'users': ranking['users'],
+            'users_count': ranking['users_count']
+        }
+    )
 
 
 @allow_see_list
@@ -105,9 +106,7 @@ def rank(request, slug, page=0):
     page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
 
     data = pagination_dict(page)
-    data.update({
-        'results': UserSerializer(page.object_list, many=True).data
-    })
+    data.update({'results': UserSerializer(page.object_list, many=True).data})
 
     request.frontend_context['USERS'] = data
 
@@ -120,9 +119,4 @@ def rank(request, slug, page=0):
         description = None
 
     template = "misago/userslists/rank.html"
-    return render(request, template, {
-        'rank': rank,
-        'users': page.object_list,
-
-        'paginator': data
-    })
+    return render(request, template, {'rank': rank, 'users': page.object_list, 'paginator': data})

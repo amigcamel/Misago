@@ -22,16 +22,7 @@ class MomentJSTests(TestCase):
     def test_get_locale_path(self):
         """get_locale_path returns path to locale or null if it doesnt exist"""
         EXISTING_LOCALES = (
-            'af',
-            'ar-sa',
-            'ar-sasa',
-            'de',
-            'et',
-            'pl',
-            'pl-pl',
-            'ru',
-            'pt-br',
-            'zh-tw'
+            'af', 'ar-sa', 'ar-sasa', 'de', 'et', 'pl', 'pl-pl', 'ru', 'pt-br', 'zh-tw'
         )
 
         for language in EXISTING_LOCALES:

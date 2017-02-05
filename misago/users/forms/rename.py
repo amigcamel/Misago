@@ -27,6 +27,5 @@ class ChangeUsernameForm(forms.Form):
         return data
 
     def change_username(self, changed_by):
-        self.user.set_username(
-            self.cleaned_data['username'], changed_by=changed_by)
+        self.user.set_username(self.cleaned_data['username'], changed_by=changed_by)
         self.user.save(update_fields=['username', 'slug'])

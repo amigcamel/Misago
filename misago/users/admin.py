@@ -5,11 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from .djangoadmin import User, UserAdminModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.admin.ranks import (
-    DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank,
-    RanksList, RankUsers)
+    DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank, RanksList, RankUsers
+)
 from .views.admin.users import (
-    DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList)
-
+    DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList
+)
 
 # register misago user model in django admin panel
 djadmin.site.register(model_or_iterable=User, admin_class=UserAdminModel)
@@ -22,19 +22,29 @@ class MisagoAdminExtension(object):
 
         # Accounts
         urlpatterns.namespace(r'^accounts/', 'accounts', 'users')
-        urlpatterns.patterns('users:accounts',
+        urlpatterns.patterns(
+            'users:accounts',
             url(r'^$', UsersList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
             url(r'^new/$', NewUser.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditUser.as_view(), name='edit'),
-            url(r'^delete-threads/(?P<pk>\d+)/$', DeleteThreadsStep.as_view(), name='delete-threads'),
+            url(
+                r'^delete-threads/(?P<pk>\d+)/$',
+                DeleteThreadsStep.as_view(),
+                name='delete-threads'
+            ),
             url(r'^delete-posts/(?P<pk>\d+)/$', DeletePostsStep.as_view(), name='delete-posts'),
-            url(r'^delete-account/(?P<pk>\d+)/$', DeleteAccountStep.as_view(), name='delete-account'),
+            url(
+                r'^delete-account/(?P<pk>\d+)/$',
+                DeleteAccountStep.as_view(),
+                name='delete-account'
+            ),
         )
 
         # Ranks
         urlpatterns.namespace(r'^ranks/', 'ranks', 'users')
-        urlpatterns.patterns('users:ranks',
+        urlpatterns.patterns(
+            'users:ranks',
             url(r'^$', RanksList.as_view(), name='index'),
             url(r'^new/$', NewRank.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditRank.as_view(), name='edit'),
@@ -47,7 +57,8 @@ class MisagoAdminExtension(object):
 
         # Bans
         urlpatterns.namespace(r'^bans/', 'bans', 'users')
-        urlpatterns.patterns('users:bans',
+        urlpatterns.patterns(
+            'users:bans',
             url(r'^$', BansList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', BansList.as_view(), name='index'),
             url(r'^new/$', NewBan.as_view(), name='new'),

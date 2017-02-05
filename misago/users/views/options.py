@@ -20,9 +20,7 @@ def index(request, *args, **kwargs):
             'component': section['component'],
         })
 
-    request.frontend_context.update({
-        'USER_OPTIONS': user_options
-    });
+    request.frontend_context.update({'USER_OPTIONS': user_options})
 
     return render(request, 'misago/options/noscript.html')
 
@@ -37,8 +35,8 @@ def confirm_change_view(f):
         try:
             return f(request, token)
         except ChangeError as e:
-            return render(request, 'misago/options/credentials_error.html',
-                status=400)
+            return render(request, 'misago/options/credentials_error.html', status=400)
+
     return decorator
 
 
@@ -55,9 +53,13 @@ def confirm_email_change(request, token):
         raise ChangeError()
 
     message = _("%(user)s, your e-mail has been changed.")
-    return render(request, 'misago/options/credentials_changed.html', {
-            'message': message % {'user': request.user.username},
-        })
+    return render(
+        request, 'misago/options/credentials_changed.html', {
+            'message': message % {
+                'user': request.user.username
+            },
+        }
+    )
 
 
 @confirm_change_view
@@ -71,6 +73,10 @@ def confirm_password_change(request, token):
     request.user.save(update_fields=['password'])
 
     message = _("%(user)s, your password has been changed.")
-    return render(request, 'misago/options/credentials_changed.html', {
-            'message': message % {'user': request.user.username},
-        })
+    return render(
+        request, 'misago/options/credentials_changed.html', {
+            'message': message % {
+                'user': request.user.username
+            },
+        }
+    )

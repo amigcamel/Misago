@@ -14,6 +14,7 @@ def reset_view(f):
     @deny_banned_ips
     def decorator(*args, **kwargs):
         return f(*args, **kwargs)
+
     return decorator
 
 
@@ -35,16 +36,16 @@ def reset_password_form(request, pk, token):
     requesting_user = get_object_or_404(User.objects, pk=pk)
 
     try:
-        if (request.user.is_authenticated() and
-                request.user.id != requesting_user.id):
-            message = _("%(user)s, your link has expired. "
-                        "Please request new link and try again.")
+        if (request.user.is_authenticated() and request.user.id != requesting_user.id):
+            message = _(
+                "%(user)s, your link has expired. "
+                "Please request new link and try again."
+            )
             message = message % {'user': requesting_user.username}
             raise ResetError(message)
 
         if not is_password_change_token_valid(requesting_user, token):
-            message = _("%(user)s, your link is invalid. "
-                        "Please try again or request new link.")
+            message = _("%(user)s, your link is invalid. " "Please try again or request new link.")
             message = message % {'user': requesting_user.username}
             raise ResetError(message)
 
@@ -52,14 +53,16 @@ def reset_password_form(request, pk, token):
         if ban:
             raise Banned(ban)
     except ResetError as e:
-        return render(request, 'misago/forgottenpassword/error.html', {
-                'message': e.args[0],
-            }, status=400)
+        return render(
+            request, 'misago/forgottenpassword/error.html', {'message': e.args[0], }, status=400
+        )
 
-    api_url = reverse('misago:api:change-forgotten-password', kwargs={
-        'pk': pk,
-        'token': token,
-    })
+    api_url = reverse(
+        'misago:api:change-forgotten-password', kwargs={
+            'pk': pk,
+            'token': token,
+        }
+    )
 
     request.frontend_context['CHANGE_PASSWORD_API'] = api_url
     return render(request, 'misago/forgottenpassword/form.html')

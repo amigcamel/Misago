@@ -30,7 +30,7 @@ class Command(BaseCommand):
             if random.randint(1, 100) > 10:
                 processed_count += 1
                 show_progress(self, processed_count, total_users)
-                continue # 10% active users
+                continue    # 10% active users
 
             users_to_add = random.randint(1, total_users / 5)
             random_queryset = User.objects.exclude(id=user.id).order_by('?')
