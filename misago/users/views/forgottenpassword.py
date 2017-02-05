@@ -45,7 +45,7 @@ def reset_password_form(request, pk, token):
             raise ResetError(message)
 
         if not is_password_change_token_valid(requesting_user, token):
-            message = _("%(user)s, your link is invalid. " "Please try again or request new link.")
+            message = _("%(user)s, your link is invalid. Please try again or request new link.")
             message = message % {'user': requesting_user.username}
             raise ResetError(message)
 

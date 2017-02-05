@@ -74,7 +74,7 @@ class EditCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
 class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%(name)s" is special ' 'role and can\'t be deleted.')
+            message = _('Role "%(name)s" is special role and can\'t be deleted.')
             return message % {'name': target.name}
 
     def button_action(self, request, target):
@@ -202,7 +202,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 
             acl_version.invalidate()
 
-            message = _("Category permissions for role " "%(name)s have been changed.")
+            message = _("Category permissions for role %(name)s have been changed.")
             messages.success(request, message % {'name': target.name})
             if 'stay' in request.POST:
                 return redirect(request.path)

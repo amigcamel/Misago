@@ -168,7 +168,7 @@ def allow_lift_ban(user, target):
         if not ban.valid_until:
             raise PermissionDenied(_("You can't lift permanent bans."))
         elif ban.valid_until > lift_cutoff:
-            message = _("You can't lift bans that " "expire after %(expiration)s.")
+            message = _("You can't lift bans that expire after %(expiration)s.")
             message = message % {'expiration': format_date(lift_cutoff)}
             raise PermissionDenied(message)
 
