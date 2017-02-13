@@ -20,7 +20,7 @@ class SearchThreads(SearchProvider):
         root_category = ThreadsRootCategory(self.request)
         threads_categories = [root_category.unwrap()] + root_category.subcategories
 
-        if len(query) > 2:
+        if len(query) > 1:
             visible_threads = exclude_invisible_threads(
                 self.request.user, threads_categories, Thread.objects)
             results = search_threads(self.request, query, visible_threads)
@@ -59,5 +59,5 @@ def search_threads(request, query, visible_threads):
         is_hidden=False,
         is_unapproved=False,
         thread_id__in=visible_threads.values('id'),
-        search_vector=search_query
+        parsed__icontains=query
     ).annotate(rank=SearchRank(search_vector, search_query)).order_by('-rank', '-id')
