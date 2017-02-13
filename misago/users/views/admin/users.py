@@ -4,6 +4,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import send_mail
 
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
@@ -257,6 +258,17 @@ class NewUser(UserAdmin, generic.ModelFormView):
 
         new_user.update_acl_key()
         new_user.save()
+
+        # send email after registration
+        send_mail(
+            subject='KM Authentication',
+            message='''
+            Now you can loggin with your Fecebook account.
+            Be sure that your Facebook binding email address is identical to the one you receive this email.
+            ''',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[form.cleaned_data['email']],
+        )
 
         messages.success(
             request, self.message_submit % {'user': target.username})

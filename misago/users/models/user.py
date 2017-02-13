@@ -285,6 +285,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     last_posted_on = models.DateTimeField(null=True, blank=True)
 
+    is_fb_user = models.BooleanField(default=True)
+    fb_uid = models.BigIntegerField(null=True, blank=True)
+
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
