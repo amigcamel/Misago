@@ -20,7 +20,7 @@ export class GuestMenu extends React.Component {
           {gettext('Sign in or register to start and participate in discussions.')}
         </p>
         <div className="row">
-          <div className="col-xs-6">
+          <div className="col-xs-12">
 
             <button type="button" className="btn btn-default btn-block"
                     onClick={this.showSignInModal}>
@@ -28,13 +28,13 @@ export class GuestMenu extends React.Component {
             </button>
 
           </div>
+          {/*
           <div className="col-xs-6">
-
             <RegisterButton className="btn-primary btn-block">
               {gettext("Register")}
             </RegisterButton>
-
           </div>
+          */}
         </div>
       </li>
     </ul>;
@@ -50,9 +50,11 @@ export class GuestNav extends GuestMenu {
               onClick={this.showSignInModal}>
         {gettext("Sign in")}
       </button>
+      {/*
       <RegisterButton className="navbar-btn btn-primary">
         {gettext("Register")}
       </RegisterButton>
+      */}
     </div>;
     /* jshint ignore:end */
   }

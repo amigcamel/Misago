@@ -136,13 +136,20 @@ export default class extends Form {
           </div>
           <div className="modal-footer">
             {this.getActivationButton()}
-            <Button className="btn-primary btn-block"
+            <Button className="btn-default btn-block"
                     loading={this.state.isLoading}>
               {gettext("Sign in")}
             </Button>
+            {/*
             <a href={misago.get('FORGOTTEN_PASSWORD_URL')}
                className="btn btn-default btn-block">
                {gettext("Forgot password?")}
+            </a>
+            */}
+            <a href="#"
+               className="btn btn-primary btn-block"
+               onClick={function() {fb_login()}}>
+               Facebook 登入
             </a>
           </div>
         </form>
