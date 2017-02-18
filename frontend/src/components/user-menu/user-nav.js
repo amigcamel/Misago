@@ -29,6 +29,15 @@ export class UserMenu extends React.Component {
           <strong>{this.props.user.username}</strong>
         </li>
         <li className="divider" />
+
+        <li className="is-staff">
+          <a href={'/admincp'} target='_blank'>
+            <span className="material-icon">stars</span>
+            管理介面
+          </a>
+        </li>
+        <li className="divider is-staff" />
+
         <li>
           <a href={this.props.user.absolute_url}>
             <span className="material-icon">account_circle</span>
