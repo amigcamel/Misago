@@ -20,6 +20,7 @@
 <th style="width: 200px;">{% trans "E-mail" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
 <th style="width: 200px;">{% trans "Joined" %}</th>
+<th style="width: 200px;">{% trans "Last login" %}</th>
 <th style="width: 128px;">{% trans "Posts" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
@@ -69,6 +70,9 @@
 </td>
 <td>
   <abbr class="moment" data-iso="{{ item.joined_on.isoformat }}" data-format="LL"></abbr>
+</td>
+<td>
+  {{ item.last_login }}
 </td>
 <td>
   {{ item.posts }}
