@@ -74,7 +74,7 @@ export default class extends React.Component {
   getStartThreadButton() {
     if (this.props.user.id) {
       /* jshint ignore:start */
-      return <Button className="btn btn-success btn-aligned hidden-xs hidden-sm"
+      return <Button className="btn btn-success btn-aligned"
                      onClick={this.startThread}
                      disabled={this.props.disabled}>
         <span className="material-icon">
